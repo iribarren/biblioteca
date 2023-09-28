@@ -106,12 +106,84 @@ function modoBlue() {
     echo 'miss: ' . $m.PHP_EOL;
 }
 
-echo "Prueba".PHP_EOL;
+function oraculo($tabla) {
+    return $tabla[tirarDado(count($tabla)) -1];
+}
 
-echo "Aqui nos paramos".PHP_EOL;;
+$tablaGenero = [
+    'Fantasía',
+    'XXXPunk',
+    'Mitos de Cthulhu',
+    'Sobrenatural',
+    'Romance',
+    'Investigación',
+];
 
-modoIron();
+$tablaEpoca = [
+    'Antigüedad',
+    'Medieval',
+    'Renacimiento',
+    'Victoriana',
+    'Contemporanea',
+    'Futuro',
+];
 
-modoBlue();
+$tablaEncuadernacion = [
+    ['Piel humana' => 'Terror, crueldad, dolor, sentimientos'],
+    ['Cuero' => 'Historia, religión, Campo, Animales'],
+    ['Hueso' => 'Vida, Muerte, antiguedad, antepasados'],
+    ['Cartulina' => 'Simpleza, utilidad, práctico, barato'],
+    ['Madera' => 'Rústico, dureza, Oficios'],
+    ['Terciopelo' => 'Lujo, Ternura, suavidad'],
+];
 
-echo " y terminamos".PHP_EOL;;
+$tablaColor = [
+    ['Negro' => 'Oscuridad, noche, oculto'],
+    ['Rojo' => 'Pasión, romance, calor'],
+    ['Morado' => 'Misticismo, Sabiduria'],
+    ['Verde' => 'Naturaleza, esperanza'],
+    ['Azul' => 'Cielo, Mar, Libertad'],
+    ['Blanco' => 'Pureza, luz, día'],
+];
+
+$tablaOlor = [
+    'Flores silvestres',
+    'Mar',
+    'Tierra mojada',
+    'Especias de cocina',
+    'Fruta podrida',
+    'Madera quemada',
+];
+
+$tablaEstilo = [
+    'Lomo y cubierta decorados de filigranas doradas y plateadas',
+    'Guarniciones de hierro en las esquinas y cerrado con un candado',
+    'Título y detalles en relieve en la parte frontal y trasera del libro',
+    'Tratado pictórico con dibujos de gran calidad',
+    'Caligrafía exquisita con distintos dibujos',
+    'Escrito en alfabeto desconocido y con muchas ilustraciones extrañas',
+];
+
+//modoIron();
+
+//modoBlue();
+
+$genero = oraculo($tablaGenero);
+$epoca = oraculo($tablaEpoca);
+$olor = oraculo($tablaOlor);
+$colorArr = oraculo($tablaColor);
+$color = key($colorArr);
+$colorAyuda = current($colorArr);
+$encuadernacionArr = oraculo($tablaEncuadernacion);
+$encuadernacion = key($encuadernacionArr);
+$encuadernacionAyuda = current($encuadernacionArr);
+$estilo = oraculo($tablaEstilo);
+
+echo "Visualiza una biblioteca " . $genero . " en la epoca " . $epoca . "<br />";
+
+echo "Visualiza un libro con las siguientes caracteristicas: <br />";
+
+echo "Encuadernacion:" . $encuadernacion ."<br />";
+echo "Color:" . $color ."<br />";
+echo "Olor:" . $olor ."<br />";
+echo "Estilo:" . $estilo ."<br />";
