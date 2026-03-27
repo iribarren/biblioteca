@@ -1,0 +1,309 @@
+/* ============================================================
+   THEME.CSS — La Biblioteca
+   CSS custom properties, reset, typography, base styles
+   ============================================================ */
+
+/* --- Google Fonts import (fallback if offline) --- */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
+
+/* --- Custom Properties --- */
+:root {
+  /* Color Palette */
+  --color-bg-deep:        #1a1a2e;
+  --color-bg-panel:       #2d2d44;
+  --color-bg-panel-light: #363655;
+  --color-paper:          #f4e8c1;
+  --color-paper-dark:     #e8d5a3;
+  --color-paper-deeper:   #d9c48a;
+  --color-gold:           #c9a84c;
+  --color-gold-dark:      #8b6914;
+  --color-gold-bright:    #e8c46a;
+  --color-gold-glow:      rgba(201, 168, 76, 0.25);
+  --color-text-dark:      #2c1810;
+  --color-text-medium:    #4a3520;
+  --color-text-light:     #e8d5a3;
+  --color-text-muted:     #9a8a6a;
+  --color-text-panel:     #c8b896;
+  --color-border-panel:   rgba(201, 168, 76, 0.3);
+  --color-border-paper:   #c9a84c;
+
+  /* Outcome Colors */
+  --color-success:        #4a7c59;
+  --color-success-light:  #6aad80;
+  --color-success-bg:     rgba(74, 124, 89, 0.15);
+  --color-partial:        #c9a84c;
+  --color-partial-bg:     rgba(201, 168, 76, 0.15);
+  --color-failure:        #8b3a3a;
+  --color-failure-light:  #c05050;
+  --color-failure-bg:     rgba(139, 58, 58, 0.15);
+
+  /* Typography */
+  --font-heading:   'Cinzel', 'Palatino Linotype', Georgia, serif;
+  --font-body:      'Lora', Georgia, 'Times New Roman', serif;
+  --font-mono:      'Courier New', Courier, monospace;
+
+  /* Font Sizes */
+  --fs-xs:   0.75rem;
+  --fs-sm:   0.875rem;
+  --fs-base: 1rem;
+  --fs-md:   1.125rem;
+  --fs-lg:   1.25rem;
+  --fs-xl:   1.5rem;
+  --fs-2xl:  2rem;
+  --fs-3xl:  2.75rem;
+  --fs-4xl:  3.5rem;
+
+  /* Spacing */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* Borders & Radius */
+  --radius-sm:  4px;
+  --radius-md:  8px;
+  --radius-lg:  12px;
+  --radius-xl:  16px;
+
+  /* Shadows */
+  --shadow-panel:  0 4px 24px rgba(0, 0, 0, 0.5);
+  --shadow-card:   0 2px 12px rgba(0, 0, 0, 0.4);
+  --shadow-gold:   0 0 12px rgba(201, 168, 76, 0.4);
+  --shadow-inset:  inset 0 1px 3px rgba(0, 0, 0, 0.2);
+
+  /* Transitions */
+  --transition-fast:   150ms ease;
+  --transition-base:   250ms ease;
+  --transition-slow:   400ms ease;
+
+  /* Sidebar */
+  --sidebar-width: 280px;
+}
+
+/* --- CSS Reset --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg-deep);
+  color: var(--color-text-light);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+  /* Subtle background texture using radial gradients */
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(45, 45, 68, 0.6) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(45, 45, 68, 0.4) 0%, transparent 60%);
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  border: none;
+  background: none;
+}
+
+input, textarea, select {
+  font-family: inherit;
+}
+
+a {
+  color: var(--color-gold);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-gold-bright);
+}
+
+ul, ol {
+  list-style: none;
+}
+
+/* --- Typography --- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-gold);
+}
+
+h1 { font-size: var(--fs-3xl); }
+h2 { font-size: var(--fs-2xl); }
+h3 { font-size: var(--fs-xl); }
+h4 { font-size: var(--fs-lg); }
+h5 { font-size: var(--fs-md); }
+h6 { font-size: var(--fs-base); }
+
+p {
+  line-height: 1.7;
+  margin-bottom: var(--space-4);
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+strong {
+  font-weight: 600;
+  color: var(--color-gold-bright);
+}
+
+em {
+  font-style: italic;
+  color: var(--color-text-panel);
+}
+
+/* --- Scrollbar Styling --- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-deep);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-gold-dark);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold);
+}
+
+/* --- Utility Classes --- */
+.text-gold    { color: var(--color-gold); }
+.text-muted   { color: var(--color-text-muted); }
+.text-paper   { color: var(--color-text-dark); }
+.text-center  { text-align: center; }
+.text-sm      { font-size: var(--fs-sm); }
+.text-xs      { font-size: var(--fs-xs); }
+
+.font-heading { font-family: var(--font-heading); }
+.font-body    { font-family: var(--font-body); }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* --- Decorative Divider --- */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-6) 0;
+  color: var(--color-gold);
+  opacity: 0.5;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--color-gold), transparent);
+}
+
+.divider-icon {
+  font-size: var(--fs-sm);
+}
+
+/* --- Animations --- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulseGold {
+  0%, 100% { box-shadow: 0 0 6px rgba(201, 168, 76, 0.3); }
+  50%       { box-shadow: 0 0 18px rgba(201, 168, 76, 0.7); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes diceRoll {
+  0%   { transform: rotate(0deg) scale(1); }
+  25%  { transform: rotate(90deg) scale(1.1); }
+  50%  { transform: rotate(180deg) scale(0.9); }
+  75%  { transform: rotate(270deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes revealResult {
+  0%   { opacity: 0; transform: scale(0.85); }
+  60%  { transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes candleFlicker {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.85; }
+  75%       { opacity: 0.95; }
+}
+
+.animate-fade-in    { animation: fadeIn 0.4s ease forwards; }
+.animate-fade-in-up { animation: fadeInUp 0.5s ease forwards; }
+.animate-slide-left { animation: slideInLeft 0.4s ease forwards; }
+
+/* --- Loading Spinner --- */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(201, 168, 76, 0.3);
+  border-top-color: var(--color-gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
+  margin-right: var(--space-2);
+}
+
+/* --- Outcome Color Utilities --- */
+.outcome-hit     { color: var(--color-success-light); }
+.outcome-partial { color: var(--color-gold-bright); }
+.outcome-miss    { color: var(--color-failure-light); }

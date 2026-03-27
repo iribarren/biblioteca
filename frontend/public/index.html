@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Biblioteca — Un juego de rol en solitario</title>
+  <meta name="description" content="Explora las memorias de tu personaje a través de los libros de una biblioteca mental.">
+
+  <!-- Google Fonts: Cinzel (headings) + Lora (body text) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/book.css">
+  <link rel="stylesheet" href="css/dice.css">
+</head>
+<body>
+
+<!-- ============================================================
+     START SCREEN — Full viewport, shown before any game
+     ============================================================ -->
+<section id="screen-start" class="screen-full" role="main">
+  <!-- Atmospheric background overlay -->
+  <div class="start-bg-overlay" aria-hidden="true"></div>
+
+  <!-- Decorative candles at the bottom -->
+  <div class="start-decoration" aria-hidden="true">
+    <div class="candle-row">
+      <div class="candle">
+        <span class="candle-flame">🕯</span>
+        <div class="candle-body"></div>
+      </div>
+      <div class="candle">
+        <span class="candle-flame">🕯</span>
+        <div class="candle-body" style="height:48px;"></div>
+      </div>
+      <div class="candle">
+        <span class="candle-flame">🕯</span>
+        <div class="candle-body" style="height:28px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="start-content">
+    <div class="start-logo">
+      <div class="start-logo-icon" role="img" aria-label="Biblioteca">📚</div>
+      <h1 class="start-title">La Biblioteca</h1>
+      <p class="start-subtitle">Un juego de rol en solitario</p>
+    </div>
+
+    <div class="divider"><span class="divider-icon">✦</span></div>
+
+    <p style="font-family:var(--font-body);font-size:var(--fs-sm);color:var(--color-text-muted);text-align:center;
+      line-height:1.8;max-width:360px;font-style:italic;">
+      Entre estantes polvorientos y la luz de las velas, las páginas de tu pasado
+      esperan ser leídas. ¿Te atreves a abrir el primer libro?
+    </p>
+
+    <div class="start-buttons">
+      <button class="btn btn-primary btn-lg btn-full" id="btn-new-game">
+        <span class="btn-text">✦ Nueva Partida</span>
+        <span class="btn-spinner"><span class="spinner"></span></span>
+      </button>
+
+      <div class="start-divider" aria-hidden="true"></div>
+
+      <button class="btn btn-secondary btn-full" id="btn-continue-game" style="display:none;">
+        <span class="btn-text">↩ Continuar Partida</span>
+        <span class="btn-spinner"><span class="spinner"></span></span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     GAME LAYOUT — Sidebar + Main content (all in-game screens)
+     ============================================================ -->
+<div id="game-layout" class="game-layout" style="display:none;">
+
+  <!-- ==================== SIDEBAR ==================== -->
+  <aside class="sidebar" role="complementary" aria-label="Panel de juego">
+
+    <!-- Branding -->
+    <div class="sidebar-brand">
+      <div class="game-title">La Biblioteca</div>
+      <div class="game-subtitle">Diario de un alma perdida</div>
+    </div>
+
+    <!-- Phase indicator -->
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Fase Actual</div>
+      <div class="phase-indicator" id="sidebar-phase">
+        <div class="phase-indicator-dot" aria-hidden="true"></div>
+        <span class="phase-indicator-text">—</span>
+      </div>
+    </div>
+
+    <!-- Character info -->
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Personaje</div>
+      <div class="character-info" id="sidebar-character">
+        <div class="character-detail text-muted">Sin personaje aún...</div>
+      </div>
+    </div>
+
+    <!-- Attributes -->
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Atributos</div>
+      <div class="attribute-list" id="sidebar-attributes">
+        <div class="character-detail text-muted">—</div>
+      </div>
+    </div>
+
+    <!-- Overcome score (epilogue only) -->
+    <div class="overcome-display" id="sidebar-overcome" style="display:none;">
+      <span class="overcome-label">Puntos Superados</span>
+      <span class="overcome-value">0</span>
+    </div>
+
+    <!-- Phase stepper -->
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Progreso</div>
+      <div class="phase-steps" id="sidebar-steps"></div>
+    </div>
+
+    <!-- Journal toggle (pushes to bottom via margin-top:auto in layout) -->
+    <button class="journal-toggle-btn" id="btn-journal-toggle" aria-label="Abrir diario">
+      📜 Ver Diario
+    </button>
+
+    <!-- Exit game button -->
+    <button class="sidebar-exit-btn" id="btn-exit-game" aria-label="Volver al inicio">
+      ← Volver al Inicio
+    </button>
+
+  </aside>
+
+  <!-- ==================== MAIN CONTENT ==================== -->
+  <main class="main-content" id="main-content" role="main">
+
+    <!-- PROLOGUE SCREEN -->
+    <section id="screen-prologue" class="screen" aria-label="Prólogo">
+      <!-- Populated dynamically by renderPrologueScreen() -->
+    </section>
+
+    <!-- CHAPTER SCREEN (reused for chapters 1, 2, 3) -->
+    <section id="screen-chapter" class="screen" aria-label="Capítulo">
+      <!-- Populated dynamically by renderChapterScreen() -->
+    </section>
+
+    <!-- EPILOGUE SCREEN -->
+    <section id="screen-epilogue" class="screen" aria-label="Epílogo">
+      <!-- Populated dynamically by renderEpilogueScreen() -->
+    </section>
+
+    <!-- COMPLETED / SUMMARY SCREEN -->
+    <section id="screen-completed" class="screen" aria-label="Historia completada">
+      <!-- Populated dynamically by renderCompletedScreen() -->
+    </section>
+
+  </main>
+
+</div><!-- /#game-layout -->
+
+<!-- ============================================================
+     JOURNAL PANEL — Slide-in overlay from the right
+     ============================================================ -->
+<div class="panel-overlay" id="panel-overlay" aria-hidden="true"></div>
+<aside class="journal-panel" id="journal-panel" role="dialog" aria-label="Diario de la partida" aria-modal="true">
+  <div class="journal-panel-header">
+    <h2 class="journal-panel-title">📜 Diario</h2>
+    <button class="journal-panel-close" id="journal-panel-close" aria-label="Cerrar diario">✕</button>
+  </div>
+  <div class="journal-panel-body" id="journal-panel-body">
+    <p style="font-family:var(--font-body);font-size:var(--fs-sm);color:var(--color-text-muted);
+      font-style:italic;text-align:center;padding:var(--space-8) 0;">
+      Las páginas esperan ser escritas...
+    </p>
+  </div>
+</aside>
+
+<!-- ============================================================
+     EXIT GAME MODAL
+     ============================================================ -->
+<div class="modal-overlay" id="modal-exit" style="display:none;" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Salir de la partida">
+    <h3 class="modal-title">¿Salir de la partida?</h3>
+    <p class="modal-text">Tu progreso se guarda automáticamente con cada acción.</p>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="btn-exit-save">Guardar y Salir</button>
+      <button class="btn btn-ghost" id="btn-exit-nosave">Salir sin Guardar</button>
+      <button class="btn btn-secondary" id="btn-exit-cancel">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     JavaScript — ES Modules
+     ============================================================ -->
+<script type="module" src="js/app.js"></script>
+
+</body>
+</html>

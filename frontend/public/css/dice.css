@@ -1,0 +1,674 @@
+/* ============================================================
+   DICE.CSS — La Biblioteca
+   Animated dice rolling system + UI polish additions
+   ============================================================ */
+
+/* ============================================================
+   DICE ANIMATOR CONTAINER
+   ============================================================ */
+
+.dice-animator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-12);
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+}
+
+/* Atmospheric intro text */
+.dice-rolling-intro {
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: diceIntroReveal 0.3s ease forwards;
+}
+
+@keyframes diceIntroReveal {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   DICE STAGE LAYOUT
+   ============================================================ */
+
+.dice-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+}
+
+.dice-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.dice-group-label {
+  font-family: var(--font-heading);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.dice-vs-divider {
+  font-family: var(--font-heading);
+  font-size: var(--fs-md);
+  color: var(--color-gold);
+  opacity: 0.6;
+  padding: 0 var(--space-2);
+  align-self: center;
+}
+
+.dice-challenge-pair {
+  display: flex;
+  gap: var(--space-4);
+}
+
+/* ============================================================
+   D6 — 3D CSS CUBE
+   ============================================================ */
+
+.d6-wrapper {
+  perspective: 300px;
+  width: 80px;
+  height: 80px;
+}
+
+.d6-cube {
+  width: 80px;
+  height: 80px;
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateX(0deg) rotateY(0deg);
+  transition: transform 0.15s ease;
+}
+
+/* Rolling animation: 3 phases of random multi-axis spin */
+.d6-cube.rolling {
+  animation: d6Roll 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.d6-cube.landing {
+  animation: d6Land 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes d6Roll {
+  0%   { transform: rotateX(0deg) rotateY(0deg); }
+  15%  { transform: rotateX(180deg) rotateY(90deg); }
+  30%  { transform: rotateX(360deg) rotateY(270deg); }
+  45%  { transform: rotateX(450deg) rotateY(360deg); }
+  60%  { transform: rotateX(540deg) rotateY(450deg); }
+  75%  { transform: rotateX(630deg) rotateY(540deg); }
+  90%  { transform: rotateX(700deg) rotateY(700deg); }
+  100% { transform: rotateX(720deg) rotateY(720deg); }
+}
+
+@keyframes d6Land {
+  0%   { transform: scale(1.15) rotateX(var(--land-x)) rotateY(var(--land-y)); }
+  60%  { transform: scale(0.97) rotateX(var(--land-x)) rotateY(var(--land-y)); }
+  100% { transform: scale(1)    rotateX(var(--land-x)) rotateY(var(--land-y)); }
+}
+
+/* Each face of the cube */
+.d6-face {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border: 2px solid var(--color-gold-dark);
+  border-radius: var(--radius-md);
+  background: linear-gradient(145deg, #3a2e1e, #2a1f10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  color: var(--color-gold-bright);
+  text-shadow: 0 0 8px rgba(232, 196, 106, 0.6);
+  backface-visibility: hidden;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -2px 4px rgba(0,0,0,0.4);
+}
+
+/* The "active" face has a gold inner glow */
+.d6-face.active-face {
+  box-shadow:
+    inset 0 0 12px rgba(201, 168, 76, 0.3),
+    0 0 16px rgba(201, 168, 76, 0.4);
+  border-color: var(--color-gold);
+}
+
+/* Cube face transforms */
+.d6-face-front  { transform: translateZ(40px); }
+.d6-face-back   { transform: rotateY(180deg) translateZ(40px); }
+.d6-face-right  { transform: rotateY(90deg) translateZ(40px); }
+.d6-face-left   { transform: rotateY(-90deg) translateZ(40px); }
+.d6-face-top    { transform: rotateX(90deg) translateZ(40px); }
+.d6-face-bottom { transform: rotateX(-90deg) translateZ(40px); }
+
+/* Mobile: no 3D, just flat number */
+@media (max-width: 600px) {
+  .d6-wrapper {
+    perspective: none;
+  }
+  .d6-cube {
+    transform-style: flat;
+  }
+  .d6-face:not(.d6-face-front) {
+    display: none;
+  }
+  .d6-face-front {
+    transform: none;
+  }
+  .d6-cube.rolling {
+    animation: d6RollMobile 1.5s ease forwards;
+  }
+  @keyframes d6RollMobile {
+    0%, 100% { transform: scale(1); }
+    20%  { transform: scale(1.1) rotate(5deg); }
+    40%  { transform: scale(0.95) rotate(-5deg); }
+    60%  { transform: scale(1.08) rotate(3deg); }
+    80%  { transform: scale(0.98) rotate(-2deg); }
+  }
+}
+
+/* ============================================================
+   D10 — SLOT MACHINE SPINNER
+   ============================================================ */
+
+.d10-spinner-wrap {
+  position: relative;
+  width: 60px;
+  height: 80px;
+  overflow: hidden;
+  border: 2px solid var(--color-gold-dark);
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, rgba(26,26,46,0.95) 0%, #1a1a2e 50%, rgba(26,26,46,0.95) 100%);
+  box-shadow:
+    inset 0 0 16px rgba(0,0,0,0.6),
+    0 2px 8px rgba(0,0,0,0.4);
+}
+
+/* Edge-fading gradient overlay */
+.d10-spinner-wrap::before,
+.d10-spinner-wrap::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 22px;
+  z-index: 2;
+  pointer-events: none;
+}
+.d10-spinner-wrap::before {
+  top: 0;
+  background: linear-gradient(to bottom, #1a1a2e, transparent);
+}
+.d10-spinner-wrap::after {
+  bottom: 0;
+  background: linear-gradient(to top, #1a1a2e, transparent);
+}
+
+/* Gold highlight line in the middle */
+.d10-highlight-bar {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 28px;
+  transform: translateY(-50%);
+  background: rgba(201, 168, 76, 0.07);
+  border-top: 1px solid rgba(201, 168, 76, 0.25);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.25);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.d10-reel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  width: 100%;
+  /* top is animated via JS */
+}
+
+.d10-reel-num {
+  width: 60px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--color-gold-bright);
+  flex-shrink: 0;
+}
+
+/* Final value highlight */
+.d10-reel-num.final-value {
+  color: var(--color-gold-bright);
+  text-shadow: 0 0 10px rgba(232, 196, 106, 0.8);
+}
+
+/* When the d10 has resolved, color it by outcome */
+.d10-spinner-wrap.beats-action {
+  border-color: var(--color-failure);
+  box-shadow:
+    inset 0 0 16px rgba(139, 58, 58, 0.2),
+    0 0 12px rgba(139, 58, 58, 0.35);
+}
+.d10-spinner-wrap.loses-to-action {
+  border-color: var(--color-success);
+  box-shadow:
+    inset 0 0 16px rgba(74, 124, 89, 0.2),
+    0 0 12px rgba(74, 124, 89, 0.35);
+}
+
+/* ============================================================
+   MATH BREAKDOWN
+   ============================================================ */
+
+.dice-math-breakdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-lg);
+}
+
+.dice-math-breakdown.visible {
+  opacity: 1;
+}
+
+.math-term {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.math-term-value {
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  color: var(--color-gold-bright);
+  line-height: 1;
+}
+
+.math-term-label {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.math-operator {
+  font-size: var(--fs-xl);
+  color: var(--color-gold);
+  opacity: 0.7;
+  align-self: center;
+}
+
+.math-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid var(--color-gold-dark);
+  border-radius: var(--radius-sm);
+}
+
+.math-result-value {
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  color: var(--color-gold);
+  line-height: 1;
+}
+
+.math-result-label {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Epilogue final: "overcome score" display */
+.overcome-score-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-6);
+  background: rgba(201, 168, 76, 0.08);
+  border: 2px solid var(--color-gold-dark);
+  border-radius: var(--radius-lg);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.overcome-score-display.visible {
+  opacity: 1;
+}
+
+.overcome-score-label {
+  font-family: var(--font-heading);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.overcome-score-number {
+  font-family: var(--font-heading);
+  font-size: var(--fs-3xl);
+  font-weight: 700;
+  color: var(--color-gold-bright);
+  line-height: 1;
+  text-shadow: 0 0 16px rgba(201, 168, 76, 0.5);
+}
+
+/* ============================================================
+   CHALLENGE COMPARISON
+   ============================================================ */
+
+.dice-comparison {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  padding: var(--space-5) var(--space-6);
+
+  border-radius: var(--radius-lg);
+}
+
+.dice-comparison.visible {
+  opacity: 1;
+}
+
+.comparison-action-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.comparison-score-value {
+  font-family: var(--font-heading);
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  color: var(--color-gold);
+  line-height: 1;
+}
+
+.comparison-score-label {
+  font-family: var(--font-heading);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.comparison-vs {
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm);
+  color: var(--color-gold);
+  opacity: 0.5;
+}
+
+.comparison-die {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.comparison-die-value {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  border: 2px solid;
+  transition: box-shadow 0.4s ease;
+}
+
+.comparison-die-value.beats {
+  color: var(--color-failure-light);
+  border-color: var(--color-failure);
+  background: var(--color-failure-bg);
+  box-shadow: 0 0 10px rgba(139, 58, 58, 0.4);
+}
+
+.comparison-die-value.loses {
+  color: var(--color-success-light);
+  border-color: var(--color-success);
+  background: var(--color-success-bg);
+  box-shadow: 0 0 10px rgba(74, 124, 89, 0.4);
+}
+
+.comparison-die-label {
+  font-family: var(--font-heading);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   OUTCOME BANNER
+   ============================================================ */
+
+.outcome-banner {
+  width: 100%;
+  max-width: 360px;
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-md);
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: var(--fs-md);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  border: 2px solid;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-16px);
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.outcome-banner.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Shine sweep effect */
+.outcome-banner::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+  pointer-events: none;
+}
+
+.outcome-banner.hit {
+  background: linear-gradient(135deg, rgba(74, 124, 89, 0.25), rgba(74, 124, 89, 0.15));
+  border-color: var(--color-success);
+  color: var(--color-success-light);
+  box-shadow: 0 0 20px rgba(74, 124, 89, 0.35), inset 0 1px 0 rgba(106, 173, 128, 0.2);
+}
+
+.outcome-banner.hit::after {
+  animation: bannerShine 2s ease 0.5s infinite;
+}
+
+.outcome-banner.weak_hit {
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.2), rgba(201, 168, 76, 0.1));
+  border-color: var(--color-gold);
+  color: var(--color-gold-bright);
+  box-shadow: 0 0 16px rgba(201, 168, 76, 0.3), inset 0 1px 0 rgba(232, 196, 106, 0.15);
+}
+
+.outcome-banner.miss {
+  background: linear-gradient(135deg, rgba(139, 58, 58, 0.25), rgba(139, 58, 58, 0.15));
+  border-color: var(--color-failure);
+  color: var(--color-failure-light);
+  box-shadow: 0 0 16px rgba(139, 58, 58, 0.35);
+  animation: none;
+}
+
+/* Miss: subtle shake on appear */
+.outcome-banner.miss.visible {
+  animation: bannerShake 0.4s ease;
+}
+
+@keyframes bannerShine {
+  0%   { left: -100%; opacity: 1; }
+  60%  { left: 120%; opacity: 0.8; }
+  100% { left: 120%; opacity: 0; }
+}
+
+@keyframes bannerShake {
+  0%, 100% { transform: translateX(0); }
+  20%  { transform: translateX(-5px); }
+  40%  { transform: translateX(5px); }
+  60%  { transform: translateX(-3px); }
+  80%  { transform: translateX(3px); }
+}
+
+/* ============================================================
+   EFFECT TEXT
+   ============================================================ */
+
+.outcome-effect-text {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-style: italic;
+  line-height: 1.5;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  text-align: center;
+  max-width: 340px;
+}
+
+.outcome-effect-text.visible {
+  opacity: 1;
+}
+
+.outcome-effect-text.hit {
+  color: var(--color-success-light);
+}
+
+.outcome-effect-text.weak_hit {
+  color: var(--color-gold-bright);
+}
+
+.outcome-effect-text.miss {
+  color: var(--color-failure-light);
+}
+
+/* ============================================================
+   PHASE TRANSITION
+   ============================================================ */
+
+.phase-transition-out {
+  animation: phaseOut 0.3s ease forwards;
+}
+
+.phase-transition-in {
+  animation: phaseIn 0.4s ease forwards;
+}
+
+@keyframes phaseOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-12px); }
+}
+
+@keyframes phaseIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   LOADING DOTS
+   ============================================================ */
+
+/* Animated "..." that cycles through 1-2-3 dots */
+.loading-dots::after {
+  content: '';
+  animation: loadingDots 1.2s steps(4, end) infinite;
+}
+
+@keyframes loadingDots {
+  0%  { content: ''; }
+  25% { content: '.'; }
+  50% { content: '..'; }
+  75% { content: '...'; }
+}
+
+/* ============================================================
+   BUTTON PRESS EFFECT (global polish)
+   ============================================================ */
+
+.btn:active:not(:disabled) {
+  transform: scale(0.97) translateY(1px);
+  transition: transform var(--transition-fast);
+}
+
+.btn-attribute:active:not(:disabled) {
+  transform: scale(0.96);
+  transition: transform var(--transition-fast);
+}
+
+/* ============================================================
+   DICE PLACEHOLDER (pre-roll static preview)
+   ============================================================ */
+
+.dice-placeholder {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.d6-placeholder-box,
+.d10-placeholder-box {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: var(--fs-2xl);
+  color: var(--color-text-muted);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-card);
+}
+
+.d10-placeholder-box {
+  width: 48px;
+  height: 64px;
+}

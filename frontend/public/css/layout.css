@@ -1,0 +1,494 @@
+/* ============================================================
+   LAYOUT.CSS — La Biblioteca
+   Sidebar, main area, app shell, responsive layout
+   ============================================================ */
+
+/* --- App Shell --- */
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Start screen occupies full viewport */
+#screen-start {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: var(--space-8);
+  position: relative;
+  overflow: hidden;
+}
+
+/* The game layout: sidebar + main content */
+.game-layout {
+  display: flex;
+  min-height: 100vh;
+  align-items: stretch;
+}
+
+/* --- Sidebar --- */
+.sidebar {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+  background: var(--color-bg-panel);
+  border-right: 1px solid var(--color-border-panel);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--space-6) var(--space-5);
+  gap: var(--space-6);
+  box-shadow: 2px 0 16px rgba(0, 0, 0, 0.4);
+  /* Subtle wood-grain gradient */
+  background-image: linear-gradient(
+    180deg,
+    rgba(45, 45, 68, 0) 0%,
+    rgba(30, 28, 50, 0.3) 100%
+  );
+}
+
+/* Sidebar title / branding */
+.sidebar-brand {
+  text-align: center;
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--color-border-panel);
+}
+
+.sidebar-brand .game-title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--color-gold);
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 8px rgba(201, 168, 76, 0.4);
+  line-height: 1.3;
+}
+
+.sidebar-brand .game-subtitle {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: var(--space-1);
+}
+
+/* Sidebar sections */
+.sidebar-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.sidebar-section-title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--color-gold-dark);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+}
+
+/* Phase indicator */
+.phase-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid var(--color-border-panel);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--color-gold);
+}
+
+.phase-indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-gold);
+  flex-shrink: 0;
+  animation: candleFlicker 2.5s ease-in-out infinite;
+}
+
+.phase-indicator-text {
+  font-family: var(--font-heading);
+  font-size: var(--fs-xs);
+  color: var(--color-text-panel);
+  letter-spacing: 0.05em;
+}
+
+/* Character info */
+.character-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.character-name {
+  font-family: var(--font-heading);
+  font-size: var(--fs-md);
+  color: var(--color-gold-bright);
+  font-weight: 600;
+}
+
+.character-detail {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.character-setting {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.setting-badge {
+  font-size: var(--fs-xs);
+  padding: 2px var(--space-2);
+  background: rgba(201, 168, 76, 0.12);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-panel);
+  font-family: var(--font-heading);
+  letter-spacing: 0.05em;
+}
+
+/* Overcome score display */
+.overcome-display {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(74, 124, 89, 0.1);
+  border: 1px solid rgba(74, 124, 89, 0.3);
+  border-radius: var(--radius-md);
+}
+
+.overcome-label {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  font-family: var(--font-heading);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.overcome-value {
+  font-family: var(--font-heading);
+  font-size: var(--fs-xl);
+  color: var(--color-success-light);
+  font-weight: 700;
+}
+
+/* Journal toggle button in sidebar */
+.journal-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid var(--color-border-panel);
+  border-radius: var(--radius-md);
+  color: var(--color-text-panel);
+  font-family: var(--font-heading);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all var(--transition-base);
+  cursor: pointer;
+  margin-top: auto;
+}
+
+.journal-toggle-btn:hover {
+  background: rgba(201, 168, 76, 0.15);
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+/* --- Main Content Area --- */
+.main-content {
+  flex: 1;
+  padding: var(--space-8) var(--space-10);
+  max-width: 860px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+/* Screens within the main content */
+.screen {
+  display: none;
+  flex-direction: column;
+  gap: var(--space-8);
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.screen.active {
+  display: flex;
+}
+
+/* Full-page screens (start screen) */
+.screen-full {
+  display: none;
+  width: 100%;
+}
+
+.screen-full.active {
+  display: flex;
+}
+
+/* Fade-out transition for start screen → game layout */
+.screen-full.fade-out {
+  animation: screenFadeOut 0.4s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes screenFadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-20px); }
+}
+
+/* Fade-in for game layout appearing */
+.game-layout.fade-in {
+  animation: screenFadeIn 0.5s ease forwards;
+}
+
+@keyframes screenFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Screen headers */
+.screen-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--color-border-panel);
+}
+
+.screen-title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-2xl);
+  color: var(--color-gold);
+  font-weight: 700;
+  text-shadow: 0 0 16px rgba(201, 168, 76, 0.3);
+}
+
+.screen-subtitle {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+/* Content sections within screens */
+.content-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-lg);
+  color: var(--color-gold);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--color-gold-dark), transparent);
+  opacity: 0.5;
+}
+
+/* --- Journal Panel (overlay/side panel) --- */
+.journal-panel {
+  position: fixed;
+  top: 0;
+  right: -520px;
+  width: 500px;
+  max-width: 90vw;
+  height: 100vh;
+  background: var(--color-bg-panel);
+  border-left: 1px solid var(--color-border-panel);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  transition: right var(--transition-slow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.journal-panel.open {
+  right: 0;
+}
+
+.journal-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-5) var(--space-6);
+  border-bottom: 1px solid var(--color-border-panel);
+  flex-shrink: 0;
+}
+
+.journal-panel-title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-lg);
+  color: var(--color-gold);
+}
+
+.journal-panel-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-size: var(--fs-lg);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+.journal-panel-close:hover {
+  color: var(--color-gold);
+  background: rgba(201, 168, 76, 0.1);
+}
+
+.journal-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* Overlay backdrop for journal panel */
+.panel-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+}
+
+.panel-overlay.active {
+  display: block;
+}
+
+/* --- Error / Info Messages --- */
+.message-bar {
+  display: none;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+  font-size: var(--fs-sm);
+  animation: fadeIn 0.3s ease;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.message-bar.visible {
+  display: flex;
+}
+
+.message-bar.error {
+  background: var(--color-failure-bg);
+  border: 1px solid var(--color-failure);
+  color: var(--color-failure-light);
+}
+
+.message-bar.success {
+  background: var(--color-success-bg);
+  border: 1px solid var(--color-success);
+  color: var(--color-success-light);
+}
+
+.message-bar.info {
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid var(--color-border-panel);
+  color: var(--color-text-panel);
+}
+
+/* --- Responsive: Mobile --- */
+@media (max-width: 768px) {
+  .game-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-width: unset;
+    height: auto;
+    position: relative;
+    padding: var(--space-4) var(--space-5);
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    border-right: none;
+    border-bottom: 1px solid var(--color-border-panel);
+  }
+
+  .sidebar-brand {
+    flex: 1 1 100%;
+    padding-bottom: var(--space-4);
+    text-align: left;
+  }
+
+  .sidebar-section {
+    flex: 1 1 200px;
+  }
+
+  .journal-toggle-btn {
+    margin-top: 0;
+  }
+
+  .main-content {
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .screen-title {
+    font-size: var(--fs-xl);
+  }
+
+  .journal-panel {
+    width: 100%;
+    max-width: 100%;
+    right: -100vw;
+    bottom: 0;
+    top: auto;
+    height: 85vh;
+    border-left: none;
+    border-top: 1px solid var(--color-border-panel);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  }
+
+  .journal-panel.open {
+    right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: var(--space-4) var(--space-3);
+    gap: var(--space-5);
+  }
+}

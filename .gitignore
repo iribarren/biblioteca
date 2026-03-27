@@ -11,6 +11,27 @@
 ### JetBrains
 .idea/
 
-### Environment
-.env
+### Environment — NEVER commit real secrets
+# Root .env is committed (contains only dev defaults)
+# Local overrides with real secrets must be in .env.local
 .env.local
+.env.*.local
+backend/.env.local
+backend/.env.*.local
+
+### Symfony backend
+backend/vendor/
+backend/var/
+backend/.phpunit.cache/
+backend/phpunit.xml
+
+### Frontend
+frontend/node_modules/
+
+### Composer (project root, if ever used)
+vendor/
+var/
+
+### OS
+.DS_Store
+Thumbs.db
