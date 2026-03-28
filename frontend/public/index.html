@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/book.css">
   <link rel="stylesheet" href="css/dice.css">
+  <link rel="stylesheet" href="css/print.css" media="print">
 </head>
 <body>
 
@@ -73,6 +74,15 @@
         <span class="btn-text">↩ Continuar Partida</span>
         <span class="btn-spinner"><span class="spinner"></span></span>
       </button>
+    </div>
+
+    <!-- Saved games list -->
+    <div class="game-list-section" id="game-list-section" style="display:none;">
+      <div class="divider"><span class="divider-icon">❧</span></div>
+      <h3 class="game-list-title">Partidas Guardadas</h3>
+      <div class="game-list" id="game-list">
+        <!-- Populated dynamically -->
+      </div>
     </div>
   </div>
 </section>

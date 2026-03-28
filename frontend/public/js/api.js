@@ -98,6 +98,14 @@ export function fetchRandomSetting() {
 // ============================================================
 
 /**
+ * Lists all game sessions (most recent first).
+ * @returns {Array<{ id, character_name, genre, epoch, current_phase, phase_label, created_at, updated_at }>}
+ */
+export function fetchGames() {
+  return get('/api/games');
+}
+
+/**
  * Creates a new game. Returns full game state.
  */
 export function createGame() {

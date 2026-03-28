@@ -1401,3 +1401,102 @@ select.form-control option {
 .modal-actions .btn {
   width: 100%;
 }
+
+/* ============================================================
+   GAME LIST (Start screen — saved games)
+   ============================================================ */
+
+.game-list-section {
+  width: 100%;
+  max-width: 420px;
+  margin-top: var(--space-4);
+}
+
+.game-list-title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm);
+  color: var(--color-gold);
+  text-align: center;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0 0 var(--space-4) 0;
+}
+
+.game-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: var(--space-1);
+}
+
+.game-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.game-list::-webkit-scrollbar-thumb {
+  background: var(--color-gold-dark);
+  border-radius: 2px;
+}
+
+.game-list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.game-list-item:hover {
+  border-color: var(--color-gold);
+  background: var(--color-surface-hover, rgba(201, 168, 76, 0.08));
+}
+
+.game-list-item-icon {
+  font-size: var(--fs-lg);
+  flex-shrink: 0;
+}
+
+.game-list-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.game-list-item-name {
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm);
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.game-list-item-meta {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.game-list-item-phase {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  color: var(--color-gold);
+  flex-shrink: 0;
+}
+
+.game-list-empty {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  font-style: italic;
+  text-align: center;
+  padding: var(--space-4) 0;
+}

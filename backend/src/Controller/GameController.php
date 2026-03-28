@@ -10,6 +10,7 @@ use App\Entity\GameSession;
 use App\Entity\JournalEntry;
 use App\Entity\RollResult;
 use App\Enum\AttributeType;
+use App\Enum\GamePhase;
 use App\Repository\BookRepository;
 use App\Repository\GameSessionRepository;
 use App\Service\GameEngine;
@@ -24,6 +25,19 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/game')]
 class GameController extends AbstractController
 {
+    /** Maps GamePhase values to their Spanish display labels. */
+    private const array PHASE_LABELS = [
+        'prologue'           => 'Prólogo',
+        'chapter_1'          => 'Capítulo I',
+        'chapter_2'          => 'Capítulo II',
+        'chapter_3'          => 'Capítulo III',
+        'epilogue_action_1'  => 'Epílogo — Acción 1',
+        'epilogue_action_2'  => 'Epílogo — Acción 2',
+        'epilogue_action_3'  => 'Epílogo — Acción 3',
+        'epilogue_final'     => 'Epílogo — Tirada Final',
+        'completed'          => 'Completado',
+    ];
+
     public function __construct(
         private readonly GameEngine             $gameEngine,
         private readonly GameSessionRepository  $gameSessionRepository,
@@ -45,6 +59,109 @@ class GameController extends AbstractController
         }
 
         return $this->json($this->serializeGameState($game), 201);
+    }
+
+    // -------------------------------------------------------------------------
+    // GET /api/games — List all game sessions (most recent first)
+    // -------------------------------------------------------------------------
+
+    #[Route('s', name: 'api_games_list', methods: ['GET'])]
+    public function list(): JsonResponse
+    {
+        $games = $this->gameSessionRepository->findAllOrderedByDate();
+
+        return $this->json(\array_map(function (GameSession $game): array {
+            $phase = $game->getCurrentPhase();
+
+            return [
+                'id'            => (string) $game->getId(),
+                'character_name' => $game->getCharacterName(),
+                'genre'          => $game->getGenre(),
+                'epoch'          => $game->getEpoch(),
+                'current_phase'  => $phase->value,
+                'phase_label'    => self::PHASE_LABELS[$phase->value] ?? $phase->value,
+                'created_at'     => $game->getCreatedAt()->format('c'),
+                'updated_at'     => $game->getUpdatedAt()->format('c'),
+            ];
+        }, $games));
+    }
+
+    // -------------------------------------------------------------------------
+    // GET /api/game/{id}/export — Export full journal document
+    // -------------------------------------------------------------------------
+
+    #[Route('/{id}/export', name: 'api_game_export', methods: ['GET'])]
+    public function export(string $id): JsonResponse
+    {
+        $game = $this->findGame($id);
+        if ($game === null) {
+            return $this->json(['error' => 'Game session not found'], 404);
+        }
+
+        // Build a phase -> RollResult index for O(1) lookup per entry
+        /** @var array<string, RollResult> $rollByPhase */
+        $rollByPhase = [];
+        foreach ($game->getRollResults() as $rollResult) {
+            $rollByPhase[$rollResult->getPhase()->value] = $rollResult;
+        }
+
+        // Sort journal entries chronologically
+        $entries = $game->getJournalEntries()->toArray();
+        \usort($entries, static fn(JournalEntry $a, JournalEntry $b) =>
+            $a->getCreatedAt() <=> $b->getCreatedAt()
+        );
+
+        $serializedEntries = \array_map(function (JournalEntry $entry) use ($rollByPhase): array {
+            $phaseValue = $entry->getPhase()->value;
+            $book       = $entry->getBook();
+            $roll       = $rollByPhase[$phaseValue] ?? null;
+
+            return [
+                'phase'       => $phaseValue,
+                'phase_label' => self::PHASE_LABELS[$phaseValue] ?? $phaseValue,
+                'content'     => $entry->getContent(),
+                'book'        => $book !== null ? [
+                    'color'   => $book->getColor(),
+                    'binding' => $book->getBinding(),
+                ] : null,
+                'roll' => $roll !== null ? [
+                    'action_die'      => $roll->getActionDie(),
+                    'challenge_die_1' => $roll->getChallengeDie1(),
+                    'challenge_die_2' => $roll->getChallengeDie2(),
+                    'action_score'    => $roll->getActionScore(),
+                    'outcome'         => $roll->getOutcome()->value,
+                    'attribute_type'  => $roll->getAttributeType()?->value,
+                ] : null,
+            ];
+        }, $entries);
+
+        // Derive final outcome from the epilogue_final roll result, if present
+        $finalRoll    = $rollByPhase[GamePhase::EPILOGUE_FINAL->value] ?? null;
+        $finalOutcome = $finalRoll?->getOutcome()->value;
+
+        $serializedAttributes = \array_map(
+            fn(Attribute $a) => [
+                'type'             => $a->getType()->value,
+                'base_value'       => $a->getBaseValue(),
+                'background'       => $a->getBackground(),
+                'background_title' => $a->getBackgroundTitle(),
+                'support'          => $a->getSupport(),
+                'support_title'    => $a->getSupportTitle(),
+            ],
+            $game->getAttributes()->toArray()
+        );
+
+        return $this->json([
+            'title'                 => 'La Biblioteca',
+            'character_name'        => $game->getCharacterName(),
+            'character_description' => $game->getCharacterDescription(),
+            'genre'                 => $game->getGenre(),
+            'epoch'                 => $game->getEpoch(),
+            'final_outcome'         => $finalOutcome,
+            'overcome_score'        => $game->getOvercomeScore(),
+            'entries'               => $serializedEntries,
+            'attributes'            => $serializedAttributes,
+        ]);
     }
 
     // -------------------------------------------------------------------------

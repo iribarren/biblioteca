@@ -395,6 +395,49 @@ function renderStartScreen() {
   if (continueBtn) {
     continueBtn.style.display = State.hasSavedGame() ? 'flex' : 'none';
   }
+  loadGameList();
+}
+
+async function loadGameList() {
+  const section = document.getElementById('game-list-section');
+  const listEl  = document.getElementById('game-list');
+  if (!section || !listEl) return;
+
+  try {
+    const games = await API.fetchGames();
+    if (!games || games.length === 0) {
+      section.style.display = 'none';
+      return;
+    }
+
+    section.style.display = '';
+    listEl.innerHTML = games.map(g => {
+      const name     = escHtml(g.character_name || 'Sin nombre');
+      const phase    = escHtml(g.phase_label || g.current_phase || '—');
+      const genre    = g.genre ? escHtml(g.genre) : '';
+      const epoch    = g.epoch ? escHtml(g.epoch) : '';
+      const meta     = [genre, epoch].filter(Boolean).join(' · ') || '—';
+      const icon     = g.current_phase === 'completed' ? '📕' : '📖';
+      const dateStr  = g.updated_at ? new Date(g.updated_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : '';
+
+      return `
+        <div class="game-list-item" data-game-id="${escHtml(g.id)}" role="button" tabindex="0" aria-label="Cargar partida de ${name}">
+          <span class="game-list-item-icon">${icon}</span>
+          <div class="game-list-item-info">
+            <div class="game-list-item-name">${name}</div>
+            <div class="game-list-item-meta">
+              <span>${meta}</span>
+              ${dateStr ? `<span>· ${dateStr}</span>` : ''}
+            </div>
+          </div>
+          <span class="game-list-item-phase">${phase}</span>
+        </div>`;
+    }).join('');
+
+  } catch (err) {
+    console.error('Could not load game list:', err);
+    section.style.display = 'none';
+  }
 }
 
 async function onNewGame() {
@@ -1916,6 +1959,21 @@ function onExitNoSave() {
 }
 
 // ============================================================
+// LOAD GAME FROM LIST
+// ============================================================
+
+async function onLoadGameFromList(gameId) {
+  try {
+    const game = await API.fetchGame(gameId);
+    State.setGame(game);
+    await fadeOutStartScreen();
+    navigateToPhase(game.current_phase);
+  } catch (err) {
+    alert(`No se pudo cargar la partida: ${err.message}`);
+  }
+}
+
+// ============================================================
 // INITIALIZATION
 // ============================================================
 
@@ -1948,6 +2006,12 @@ async function init() {
   document.addEventListener('click', (e) => {
     if (e.target.closest('#btn-roll-epilogue-action')) {
       onRollEpilogueAction();
+    }
+    // Game list item click — load a saved game
+    const gameItem = e.target.closest('.game-list-item');
+    if (gameItem) {
+      const gameId = gameItem.dataset.gameId;
+      if (gameId) onLoadGameFromList(gameId);
     }
   });
 
