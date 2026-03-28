@@ -17,4 +17,17 @@ class GameSessionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, GameSession::class);
     }
+
+    /**
+     * Returns all game sessions ordered by created_at descending (most recent first).
+     *
+     * @return GameSession[]
+     */
+    public function findAllOrderedByDate(): array
+    {
+        return $this->createQueryBuilder('g')
+            ->orderBy('g.created_at', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

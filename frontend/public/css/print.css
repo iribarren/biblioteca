@@ -1,0 +1,416 @@
+/* ============================================================
+   PRINT.CSS — La Biblioteca
+   Stylesheet for exporting the completed game summary via
+   window.print(). Loaded only with media="print".
+
+   Print-safe variable fallbacks (CSS vars don't always resolve
+   in print contexts across all browsers):
+     --color-gold    → #c9a84c
+     --font-heading  → 'Cinzel', serif
+     --font-body     → 'Lora', serif
+     --color-paper   → #f4e8c1
+   ============================================================ */
+
+@media print {
+
+  /* ----------------------------------------------------------
+     PAGE SETUP
+     ---------------------------------------------------------- */
+
+  @page {
+    margin: 1.5cm 2cm;
+    size: A4 portrait;
+  }
+
+  /* Branding header on every page */
+  @page {
+    @top-center {
+      content: "La Biblioteca";
+      font-family: 'Cinzel', serif;
+      font-size: 9pt;
+      color: #8b6914;
+      letter-spacing: 0.15em;
+    }
+  }
+
+  /* ----------------------------------------------------------
+     RESET: dark-theme overrides → paper-friendly defaults
+     ---------------------------------------------------------- */
+
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    animation: none !important;
+    transition: none !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #2c1810 !important;
+    font-family: 'Lora', Georgia, 'Times New Roman', serif;
+    font-size: 11pt;
+    line-height: 1.7;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ----------------------------------------------------------
+     HIDE EVERYTHING THAT IS NOT THE COMPLETED SCREEN
+     ---------------------------------------------------------- */
+
+  /* Full start screen and game list */
+  #screen-start     { display: none !important; }
+  .game-list-section { display: none !important; }
+
+  /* Sidebar (branding, phase, attributes, etc.) */
+  .sidebar { display: none !important; }
+
+  /* Journal slide-in panel and its backdrop */
+  .journal-panel { display: none !important; }
+  .panel-overlay  { display: none !important; }
+
+  /* All modals */
+  .modal-overlay  { display: none !important; }
+
+  /* Journal / exit controls in the sidebar */
+  .journal-toggle-btn { display: none !important; }
+  .sidebar-exit-btn   { display: none !important; }
+
+  /* Every .screen section except the completed one */
+  #screen-prologue { display: none !important; }
+  #screen-chapter  { display: none !important; }
+  #screen-epilogue { display: none !important; }
+
+  /* All buttons (export + new game buttons inside summary-header) */
+  .btn            { display: none !important; }
+
+  /* Dice and book animation containers (not relevant in print) */
+  .book-animator-container { display: none !important; }
+  .dice-roll-container     { display: none !important; }
+
+  /* ----------------------------------------------------------
+     GAME LAYOUT: let the completed screen fill the page
+     ---------------------------------------------------------- */
+
+  #game-layout {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .main-content {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* ----------------------------------------------------------
+     COMPLETED SCREEN — make it visible and full-width
+     ---------------------------------------------------------- */
+
+  #screen-completed {
+    display: block !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: #ffffff !important;
+  }
+
+  /* ----------------------------------------------------------
+     SCREEN HEADER (Historia Completada title block)
+     ---------------------------------------------------------- */
+
+  .screen-header {
+    text-align: center;
+    border-bottom: 2px solid #c9a84c;
+    padding-bottom: 0.75cm;
+    margin-bottom: 0.75cm;
+    background: transparent !important;
+    border-radius: 0 !important;
+  }
+
+  .screen-title {
+    font-family: 'Cinzel', serif;
+    font-size: 20pt;
+    font-weight: 700;
+    color: #2c1810 !important;
+    margin: 0 0 4pt 0;
+    letter-spacing: 0.05em;
+  }
+
+  .screen-subtitle {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 10pt;
+    font-style: italic;
+    color: #6b5a3a !important;
+    margin: 0;
+  }
+
+  /* ----------------------------------------------------------
+     SUMMARY HEADER (character name, genre/epoch, final result)
+     ---------------------------------------------------------- */
+
+  .summary-header {
+    text-align: center;
+    padding: 0.5cm 0 0.75cm 0 !important;
+    border: none !important;
+    border-bottom: 1px solid #d9c48a !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 6pt !important;
+    margin-bottom: 0.75cm;
+    background: transparent !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* The 📚 emoji icon — shrink a touch for print */
+  .summary-header > div:first-child {
+    font-size: 28pt !important;
+    line-height: 1;
+  }
+
+  /* Character name heading (inline style in app.js uses var(--font-heading)) */
+  .summary-header h3 {
+    font-family: 'Cinzel', serif !important;
+    font-size: 22pt !important;
+    font-weight: 700 !important;
+    color: #2c1810 !important;
+    margin: 0 !important;
+    letter-spacing: 0.04em;
+  }
+
+  /* Genre + epoch badges */
+  .setting-badge {
+    display: inline-block;
+    font-family: 'Cinzel', serif;
+    font-size: 9pt;
+    color: #4a3520 !important;
+    background: #f4e8c1 !important;
+    border: 1px solid #c9a84c !important;
+    border-radius: 3pt;
+    padding: 1pt 6pt;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin: 0 2pt;
+  }
+
+  /* Final outcome block */
+  .summary-final-result {
+    font-family: 'Cinzel', serif;
+    font-size: 14pt;
+    font-weight: 700;
+    padding: 8pt 20pt !important;
+    border-radius: 4pt !important;
+    margin-top: 4pt;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .summary-final-result.hit {
+    color: #2d6644 !important;
+    border: 2px solid #4a7c59 !important;
+    background: #eaf4ee !important;
+  }
+
+  .summary-final-result.weak_hit {
+    color: #7a5c10 !important;
+    border: 2px solid #c9a84c !important;
+    background: #fdf5e0 !important;
+  }
+
+  .summary-final-result.miss {
+    color: #7a1e1e !important;
+    border: 2px solid #8b3a3a !important;
+    background: #fceaea !important;
+  }
+
+  /* ----------------------------------------------------------
+     CONTENT SECTIONS (journal, roll log)
+     ---------------------------------------------------------- */
+
+  .content-section {
+    margin-bottom: 0.75cm;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 12pt;
+    font-weight: 700;
+    color: #8b6914 !important;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0 0 8pt 0;
+    padding-bottom: 4pt;
+    border-bottom: 1px solid #d9c48a;
+  }
+
+  /* ----------------------------------------------------------
+     JOURNAL ENTRIES
+     ---------------------------------------------------------- */
+
+  #full-journal {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;           /* controlled by journal-entry margin instead */
+  }
+
+  .journal-entry {
+    background: #fdf8ed !important;
+    border: 1px solid #d9c48a !important;
+    border-radius: 4pt !important;
+    margin-bottom: 8pt;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .journal-entry-header {
+    background: #f4e8c1 !important;
+    border-bottom: 1px solid #d9c48a !important;
+    padding: 4pt 10pt !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: baseline !important;
+  }
+
+  .journal-entry-phase {
+    font-family: 'Cinzel', serif;
+    font-size: 8pt;
+    font-weight: 600;
+    color: #4a3520 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .journal-entry-book {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 8pt;
+    font-style: italic;
+    color: #6b5a3a !important;
+  }
+
+  .journal-entry-body {
+    padding: 8pt 10pt !important;
+    font-family: 'Lora', Georgia, serif;
+    font-size: 10.5pt;
+    color: #2c1810 !important;
+    line-height: 1.65;
+    white-space: pre-wrap;
+  }
+
+  /* ----------------------------------------------------------
+     ROLL RESULTS (buildRollSummaryRow uses inline styles,
+     so we target the containing div via its parent section)
+     ---------------------------------------------------------- */
+
+  /* Each roll row is a div with inline flex styling from app.js.
+     We override the dark backgrounds and borders here. */
+  #screen-completed .content-section div[style*="display:flex"] {
+    background: #fdf8ed !important;
+    border: 1px solid #d9c48a !important;
+    border-radius: 3pt !important;
+    margin-bottom: 4pt;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    padding: 4pt 8pt !important;
+  }
+
+  /* Phase label (min-width:120px span) */
+  #screen-completed .content-section div[style*="display:flex"] span:first-child {
+    font-family: 'Cinzel', serif !important;
+    font-size: 8pt !important;
+    color: #4a3520 !important;
+  }
+
+  /* Attribute label */
+  #screen-completed .content-section div[style*="display:flex"] span:nth-child(2) {
+    font-family: 'Lora', Georgia, serif !important;
+    font-size: 9pt !important;
+    color: #6b5a3a !important;
+  }
+
+  /* Outcome label (colored via outcome-hit / outcome-partial / outcome-miss) */
+  .outcome-hit     { color: #2d6644 !important; font-family: 'Cinzel', serif !important; font-size: 8pt !important; }
+  .outcome-partial { color: #7a5c10 !important; font-family: 'Cinzel', serif !important; font-size: 8pt !important; }
+  .outcome-miss    { color: #7a1e1e !important; font-family: 'Cinzel', serif !important; font-size: 8pt !important; }
+
+  /* Action score (gold in dark theme) */
+  #screen-completed .content-section div[style*="display:flex"] span:last-child {
+    font-family: 'Cinzel', serif !important;
+    font-size: 10pt !important;
+    color: #8b6914 !important;
+    font-weight: 700;
+  }
+
+  /* ----------------------------------------------------------
+     TYPOGRAPHY — general heading/text clean-up
+     ---------------------------------------------------------- */
+
+  h1, h2, h3, h4, h5, h6 {
+    color: #2c1810 !important;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  p, li, blockquote {
+    color: #2c1810 !important;
+    orphans: 3;
+    widows: 3;
+  }
+
+  a {
+    color: #2c1810 !important;
+    text-decoration: none;
+  }
+
+  /* ----------------------------------------------------------
+     FOOTER
+     ---------------------------------------------------------- */
+
+  #screen-completed::after {
+    display: block;
+    content: "Exportado de La Biblioteca";
+    text-align: center;
+    font-family: 'Lora', Georgia, serif;
+    font-size: 8pt;
+    font-style: italic;
+    color: #9a8a6a;
+    border-top: 1px solid #d9c48a;
+    margin-top: 1cm;
+    padding-top: 6pt;
+  }
+
+  /* ----------------------------------------------------------
+     PAGE BREAKS
+     ---------------------------------------------------------- */
+
+  /* Allow natural breaks between journal block and roll block */
+  #full-journal {
+    page-break-before: auto;
+    break-before: auto;
+  }
+
+  /* Never break the summary header mid-element */
+  .summary-header,
+  .journal-entry,
+  .summary-final-result {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+} /* end @media print */
