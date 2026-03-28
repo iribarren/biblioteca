@@ -14,8 +14,10 @@
 ### Environment — NEVER commit real secrets
 # Root .env is committed (contains only dev defaults)
 # Local overrides with real secrets must be in .env.local
+# Production secret file must never be committed either
 .env.local
 .env.*.local
+.env.prod
 backend/.env.local
 backend/.env.*.local
 

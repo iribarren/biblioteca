@@ -1,0 +1,67 @@
+# Production overrides for La Biblioteca.
+# Usage: docker compose -f compose.yaml -f compose.prod.yaml up -d
+#
+# Required environment variables (no defaults — the compose file will refuse to start
+# if any of these are unset):
+#   APP_SECRET               — 32-char random string (symfony console secrets:generate-keys)
+#   MYSQL_PASSWORD           — strong password for biblioteca_user
+#   MYSQL_ROOT_PASSWORD      — strong password for MySQL root
+#   CORS_ALLOW_ORIGIN        — exact origin of your frontend, e.g. https://yourdomain.com
+#
+# Recommended: set these in .env.prod (git-ignored) and source it, or use Docker Swarm
+# secrets / your cloud provider's secrets manager.
+
+services:
+
+  # ── Backend PHP-FPM (Symfony) — production image ───────────────────────────
+  backend-php:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+      target: production
+    # No volume mounts: the image is immutable in production.
+    volumes: []
+    # No host-gateway mapping: XDebug is not installed in the production image.
+    extra_hosts: []
+    environment:
+      APP_ENV: prod
+      # No default — compose will abort if APP_SECRET is not set in the environment.
+      APP_SECRET: "${APP_SECRET:?APP_SECRET is required for production}"
+      DATABASE_URL: "mysql://biblioteca_user:${MYSQL_PASSWORD:?MYSQL_PASSWORD is required for production}@mysql:3306/biblioteca?serverVersion=8.0&charset=utf8mb4"
+      CORS_ALLOW_ORIGIN: "${CORS_ALLOW_ORIGIN:?CORS_ALLOW_ORIGIN is required for production}"
+      # PHP_IDE_CONFIG is intentionally absent — no debugger in production.
+
+  # ── Backend nginx proxy — production config ─────────────────────────────────
+  backend-nginx:
+    volumes:
+      # Backend source is baked into the backend-php image; nginx only needs public/
+      # assets from that image, shared via a named volume populated at startup.
+      - backend_public:/var/www/backend/public:ro
+      - ./docker/nginx/backend.prod.conf:/etc/nginx/conf.d/default.conf:ro
+
+  # ── Frontend (static) — production image ────────────────────────────────────
+  frontend:
+    # No volume mounts: use the files baked into the image at build time.
+    volumes: []
+    # Port 3000 is NOT exposed externally. Traffic reaches the frontend only through
+    # your reverse proxy / load balancer (Caddy, Traefik, AWS ALB, etc.).
+    ports: []
+
+  # ── MySQL 8 ──────────────────────────────────────────────────────────────────
+  mysql:
+    # Port 3306 is NOT exposed externally. Only backend-php can reach it via the
+    # internal Docker network.
+    ports: []
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required for production}"
+      MYSQL_DATABASE: biblioteca
+      MYSQL_USER: biblioteca_user
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD:?MYSQL_PASSWORD is required for production}"
+    healthcheck:
+      # Reference the variable without a default so a missing secret is caught early.
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+
+volumes:
+  # Populated by the backend-php container on startup so nginx can serve public/ assets
+  # (Symfony's web/asset files) without sharing the full source tree.
+  backend_public:
