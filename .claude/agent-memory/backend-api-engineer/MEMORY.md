@@ -1,0 +1,1 @@
+- [Project stack and conventions](project_stack.md) — Symfony 7.2/PHP 8.2/Doctrine ORM, folder layout, UUID pattern, `\sprintf` prefix rule, migration workflow

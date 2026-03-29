@@ -1,0 +1,1 @@
+- [Project Test Setup](project_test_setup.md) — PHPUnit 12 + Symfony 7.2 test infra, MySQL test DB, rate limiter override, APP_ENV fix

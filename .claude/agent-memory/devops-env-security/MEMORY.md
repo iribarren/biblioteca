@@ -1,0 +1,1 @@
+- [La Biblioteca — Infrastructure Overview](project_infrastructure.md) — Services, ports, secrets pattern, XDebug/PhpStorm config, CORS setup, Phase 2 migration note
