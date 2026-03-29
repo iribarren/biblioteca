@@ -16,7 +16,7 @@ services:
   # ── Backend PHP-FPM (Symfony) — production image ───────────────────────────
   backend-php:
     build:
-      context: ./backend
+      context: ./oracles-api
       dockerfile: Dockerfile.prod
       target: production
     # No volume mounts: the image is immutable in production.

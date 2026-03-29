@@ -18,17 +18,10 @@
 .env.local
 .env.*.local
 .env.prod
-backend/.env.local
-backend/.env.*.local
 
-### Symfony backend
-backend/vendor/
-backend/var/
-backend/.phpunit.cache/
-backend/phpunit.xml
-
-### Frontend
-frontend/node_modules/
+### Sub-projects (each has its own git repo)
+oracles-api/
+thelibrary/
 
 ### Composer (project root, if ever used)
 vendor/

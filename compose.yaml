@@ -6,7 +6,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./backend:/var/www/backend:ro
+      - ./oracles-api:/var/www/backend:ro
       - ./docker/nginx/backend.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - backend-php
@@ -15,10 +15,10 @@ services:
   # ── Backend PHP-FPM (Symfony) ────────────────────────────────────────────────
   backend-php:
     build:
-      context: ./backend
+      context: ./oracles-api
       dockerfile: Dockerfile
     volumes:
-      - ./backend:/var/www/backend
+      - ./oracles-api:/var/www/backend
       # Mount xdebug config so it only applies in dev, without rebuilding the image
       - ./docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini:ro
     depends_on:
@@ -39,13 +39,13 @@ services:
   # ── Frontend (static, served via nginx) ─────────────────────────────────────
   frontend:
     build:
-      context: ./frontend
+      context: ./thelibrary
       dockerfile: Dockerfile
     ports:
       - "3000:80"
     volumes:
       # Mount public/ for live-editing HTML/CSS/JS without rebuilds in dev
-      - ./frontend/public:/usr/share/nginx/html:ro
+      - ./thelibrary/public:/usr/share/nginx/html:ro
     restart: unless-stopped
 
   # ── MySQL 8 ──────────────────────────────────────────────────────────────────
