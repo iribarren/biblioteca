@@ -49,6 +49,21 @@ When writing documentation, you will produce clear, structured, and maintainable
 - Requirement summaries → Structured bullet lists with clear ownership indicators.
 - Roadmap items → Prioritized list with rationale.
 
+## Spec Document Workflow
+
+When defining a new feature, always save the specification as a markdown file in `docs/specs/` at the workspace root (`c:\Users\aritz\PhpstormProjects\biblioteca\docs\specs\`). Use the naming convention `YYYY-MM-DD-feature-name.md` (today's date, kebab-case name).
+
+The spec document MUST include these sections:
+- **Overview**: What this feature is and why it exists
+- **Goals**: What success looks like
+- **User Stories**: In the format "As a [persona], I want [action], so that [benefit]" with acceptance criteria
+- **Technical Approach**: High-level implementation strategy (which sub-project(s), which components)
+- **Out of Scope**: What this feature deliberately does NOT include
+- **Dependencies**: What must exist or be true before implementation can begin
+- **Risks**: Potential issues or unknowns
+
+After producing the spec, explicitly ask the user to review and approve it before implementation begins.
+
 ## Quality Checks
 
 Before finalizing any output, verify:

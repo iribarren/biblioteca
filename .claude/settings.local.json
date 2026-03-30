@@ -1,4 +1,31 @@
 {
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/check-branch.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Review the assistant's last response. If it included code edits (Edit/Write tools) to source files (.php, .js, .css, .twig) but did NOT run any tests or delegate to test-writer, respond with EXACTLY: 'Consider running tests or delegating to the test-writer agent to verify these changes.' Otherwise respond with nothing.",
+            "model": "claude-haiku-4-5-20251001",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  },
   "permissions": {
     "allow": [
       "Bash(docker compose:*)",
@@ -6,12 +33,15 @@
       "Bash(curl -s http://localhost:8080/api/oracle/random-setting)",
       "Bash(curl -s http://localhost:3000/)",
       "Bash(curl -s http://localhost:3000/js/app.js)",
-      "Bash(grep -v \"//.*getElementById\")"
+      "Bash(grep -v \"//.*getElementById\")",
       "Bash(git add *)",
       "Bash(git commit *)",
       "Bash(git status*)",
       "Bash(git diff*)",
-      "Bash(git log*)"
+      "Bash(git log*)",
+      "Bash(git checkout *)",
+      "Bash(git branch *)",
+      "Bash(git switch *)"
     ]
   }
 }
