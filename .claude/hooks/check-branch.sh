@@ -16,8 +16,12 @@ fi
 # Normalize backslashes to forward slashes (Windows paths)
 FILE_PATH=$(echo "$FILE_PATH" | tr '\' '/')
 
-# Get current branch
-BRANCH=$(git branch --show-current 2>/dev/null)
+# Get current branch — check the subrepo that owns the file, not the workspace root
+BRANCH=$(git -C "$(dirname "$FILE_PATH")" branch --show-current 2>/dev/null)
+# Fallback to workspace root if file is not in a git repo
+if [ -z "$BRANCH" ]; then
+  BRANCH=$(git branch --show-current 2>/dev/null)
+fi
 
 # If not on master, allow everything
 if [ "$BRANCH" != "master" ]; then
