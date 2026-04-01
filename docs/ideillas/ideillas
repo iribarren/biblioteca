@@ -1,0 +1,19 @@
+Estilos custom dependiendo del genero de juego
+
+Deberia existir distintas temas de la interfaz dependiendo del genero o epoca que se haya seleccionado
+tienen que existir por lo menos 6 temas
+Cada genero o epoca estara relacionado con uno de los temas, siendo posible que un tema este relacionado con varios generos o epocas
+Si el genero y la epoca tienen asignado un tema distinto, dar prioridad al tema asignado a la epoca
+Al entrar a la pantalla de inicio, si no hay un juego en marcha, se mostrara uno de los temas al azar
+
+Añadir popup informativo junto a la opcion de nueva partida que describa las instrucciones de juego
+
+Añadir enlace al pdf
+
+Securizar API
+
+Mejorar UX para partidas guardadas
+
+Nuevo modo de juego
+
+Actualizar a React
