@@ -1,4 +1,4 @@
-Estilos custom dependiendo del genero de juego
+# Estilos custom dependiendo del genero de juego
 
 Deberia existir distintas temas de la interfaz dependiendo del genero o epoca que se haya seleccionado
 tienen que existir por lo menos 6 temas
@@ -6,14 +6,32 @@ Cada genero o epoca estara relacionado con uno de los temas, siendo posible que 
 Si el genero y la epoca tienen asignado un tema distinto, dar prioridad al tema asignado a la epoca
 Al entrar a la pantalla de inicio, si no hay un juego en marcha, se mostrara uno de los temas al azar
 
-Añadir popup informativo junto a la opcion de nueva partida que describa las instrucciones de juego
+# Añadir popup informativo junto a la opcion de nueva partida que describa las instrucciones de juego
 
-Añadir enlace al pdf
+# Añadir enlace al pdf
 
-Securizar API
+# Securizar API
 
-Mejorar UX para partidas guardadas
+# Crear documentacion de la API
 
-Nuevo modo de juego
+Documenta la api utilizando la especificacion OpenApi
 
-Actualizar a React
+La documentacion debe incluir toda la informacion sobre los endpoints, los datos de entrada y salida.
+
+Se debe incluir una pagina en la que consultar toda esta informacion con swaggerUI(consulta la mejor forma de utilizarlo con symfony)
+
+Modificar el agente de backend para que cada vez que modifique un endpoint de la API actualice la documentacion
+
+# Mejorar UX para partidas guardadas
+
+# Mejorar stack para permitir añadir nuevos modo de juego y mejorar gestion de partidas guardadas
+
+Migrar el frontend un framework moderno de javascript para permitir añadir otros modos de juego
+
+Vamos a añadir nuevos modos de juegos basados en las mismas mecanicas básicas de descubrir libros, tiradas de dados y escritura de dados.
+
+Tiene sentido que tengamos componentes reutilizables en los distintos modos de juego.
+
+Analizar que framework puede ser más interesante
+
+El modo de juego actual pasara a llamarse "Aventura Rapida"

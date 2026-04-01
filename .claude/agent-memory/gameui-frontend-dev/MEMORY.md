@@ -1,3 +1,4 @@
 - [La Biblioteca Frontend Design System](project_biblioteca_frontend.md) — Color palette, fonts, file architecture, screen routing pattern for the TTRPG frontend
 - [La Biblioteca Print Export](project_biblioteca_print.md) — Print stylesheet decisions, cascade notes, completed-screen structure for print export
 - [La Biblioteca Admin Panel](project_biblioteca_admin.md) — Standalone admin.html: auth pattern, CSS conventions, JS delegation pattern, toast + modal system
+- [La Biblioteca Frontend Auth Flow (Phase 3)](project_biblioteca_auth_frontend.md) — Token storage strategy, module boundaries, modal pattern, 401 retry logic, silent refresh on boot
