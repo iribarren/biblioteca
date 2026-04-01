@@ -22,7 +22,9 @@
       "Bash(git -C /home/aritz/projects/biblioteca/thelibrary add nginx.conf)",
       "Bash(git -C:*)",
       "Bash(git push:*)",
-      "Bash(grep -l \"errors\\\\|modal\" /home/aritz/projects/biblioteca/thelibrary/public/i18n/*.json)"
+      "Bash(grep -l \"errors\\\\|modal\" /home/aritz/projects/biblioteca/thelibrary/public/i18n/*.json)",
+      "Bash(docker compose exec -T backend-php php -r \":*)",
+      "Bash(echo \"EXIT: $?\")"
     ]
   },
   "hooks": {
