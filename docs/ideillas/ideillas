@@ -12,6 +12,20 @@ Al entrar a la pantalla de inicio, si no hay un juego en marcha, se mostrara uno
 
 # Securizar API
 
+Analiza como securizar la API
+
+Tienen que existir endpoints que sean publicos y esten disponibles para todo el mundo
+
+Otros endpoints por el contrario necesitan de un token generado para un usuario registrado para ser utilizados
+
+Dentro de los endpoints disponibles para usuarios, la visibilidad de los endpoints dependerá también del rol del usuario
+
+En la pantalla de documentación de la API solo estaran visibles los endpoints que son completamente publicos
+
+Si un usuario con el rol admin que haya iniciado sesión en el admin accede a la pantalla de documentación de la API sí que verá todos los endpoints
+
+
+
 # Crear documentacion de la API
 
 Documenta la api utilizando la especificacion OpenApi
@@ -20,7 +34,7 @@ La documentacion debe incluir toda la informacion sobre los endpoints, los datos
 
 Se debe incluir una pagina en la que consultar toda esta informacion con swaggerUI(consulta la mejor forma de utilizarlo con symfony)
 
-Modificar el agente de backend para que cada vez que modifique un endpoint de la API actualice la documentacion
+Modificar el agente de backend para que cada vez que se añada o modifique un endpoint de la API actualice la documentacion
 
 # Mejorar UX para partidas guardadas
 
@@ -39,3 +53,35 @@ El modo de juego actual pasara a llamarse "Aventura Rapida", y mantendra la estr
 De cara a hacer los componentes reutilizablez, considera que otros modos de juego tendran otros flujos, por ejemplo es posible que se descubran libros que solo impliquen añadir una entrada al diario, que se tengan que añadir entradas al diario por otro motivo, o que se tengan que realizar tiradas de manera independiente
 
 Antes de realizar un plan de migracion completo, ofrece las diferencias que habria entre utilizar un framework u otro, y una vez eliga el framework, realiza un plan de migracion
+
+# Despelgar a produccion
+
+Analizar si el proyecto esta preparado para desplegarse en produccion
+
+Es correcto mantener la estructura docker o se puede hacer que cada proyecto tenga su despliegue independiente?
+
+Cuales son las mejores plataformas online para desplegar el proyecto gratis o a bajo coste
+
+# Analisis de performance
+
+Analiza como se podria mejorar la performance de juego, las transiciones en el front son bastante lentas
+
+# el puto bug
+
+i started with a fresh browser and the problem persists
+
+when i click the Chapter II button, this is the flow from the frontend i see in the web developer tools
+
+POST http://localhost:8080/api/game/63705ffa-d143-480a-af6d-8ddb67951951/journal
+
+That creates the journal entry correctly
+
+GET http://localhost:8080/api/game/63705ffa-d143-480a-af6d-8ddb67951951
+
+And this is the response json
+
+{"id":"63705ffa-d143-480a-af6d-8ddb67951951","character_name":"TEST","character_description":"TEST","genre":"XXXPunk","epoch":"Medieval","current_phase":"chapter_1","game_mode":"aventura_rapida","overcome_score":0,"support_used":false,"created_at":"2026-04-02T17:49:18+00:00","updated_at":"2026-04-02T17:49:44+00:00","attributes":[{"id":43,"type":"body","base_value":1,"background":-1,"background_title":null,"support":0,"support_title":null},{"id":44,"type":"mind","base_value":1,"background":0,"background_title":null,"support":0,"support_title":null},{"id":45,"type":"social","base_value":1,"background":0,"background_title":null,"support":0,"support_title":null}],"books":[{"id":14,"phase":"chapter_1","color":"Negro","color_hint":"Darkness, night, hidden","binding":"Piel humana","binding_hint":"Horror, cruelty, pain, feelings","smell":"Tierra mojada","smell_hint":"Rain, harvest, resolution","interior":"Escrito en alfabeto desconocido y con muchas ilustraciones extra\u00f1as"}],"journal_entries":[{"id":24,"phase":"chapter_1","content":"BIBLIO","book_id":null,"created_at":"2026-04-02T17:49:49+00:00"},{"id":25,"phase":"chapter_1","content":"eve1","book_id":14,"created_at":"2026-04-02T17:50:14+00:00"},{"id":26,"phase":"chapter_1","content":"des1","book_id":14,"created_at":"2026-04-02T17:51:25+00:00"}],"roll_results":[{"id":13,"phase":"chapter_1","action_number":null,"action_die":5,"challenge_die_1":9,"challenge_die_2":9,"modifier":1,"action_score":6,"outcome":"miss","attribute_type":"body"}]}
+
+The game phase is still chapter1
+
+Once the journal has been logged, the phase should be updated before getting the game info, so the frontend can transition to chapter 2

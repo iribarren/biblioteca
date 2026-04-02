@@ -6,6 +6,7 @@
       "Bash(curl -s http://localhost:8080/api/oracle/random-setting)",
       "Bash(curl -s http://localhost:3000/)",
       "Bash(curl -s http://localhost:3000/js/app.js)",
+      "Bash(curl *)",
       "Bash(grep -v \"//.*getElementById\")",
       "Bash(git add *)",
       "Bash(git commit *)",
