@@ -84,6 +84,55 @@ When implementing a feature:
 
 If the request is ambiguous, ask clarifying questions about: the tech stack, authentication requirements, expected request/response shapes, and any business rules that should be enforced.
 
+## OpenAPI Documentation
+
+This project uses `nelmio/api-doc-bundle` v5 with `zircote/swagger-php` for OpenAPI 3.0 documentation.
+
+- SwaggerUI (interactive): `http://localhost:8080/api/doc`
+- Raw OpenAPI spec (JSON): `http://localhost:8080/api/doc.json`
+- Reusable schemas: `oracles-api/src/ApiDoc/Schemas.php` (pure documentation classes — no runtime logic)
+- Global API info and tags: `oracles-api/src/ApiDoc/OpenApiInfo.php`
+
+### Mandatory: when adding or modifying an endpoint
+
+1. Add or update `#[OA\...]` attributes on the controller method (import: `use OpenApi\Attributes as OA;`)
+2. If the response shape is new, add a `#[OA\Schema]` to `src/ApiDoc/Schemas.php`
+3. Verify the spec is valid by visiting `/api/doc` in the browser after your change
+
+### Tag convention
+
+| Tag | Endpoints |
+|-----|-----------|
+| `Game` | All `/api/game*` endpoints |
+| `Oracle` | All `/api/oracle*` endpoints |
+| `System` | `/api/health`, `/api/test` |
+
+### Attribute pattern (quick reference)
+
+```php
+use OpenApi\Attributes as OA;
+
+#[OA\Post(
+    path: '/api/game/{id}/example',
+    operationId: 'uniqueOperationId',
+    summary: 'Short description',
+    tags: ['Game'],
+    parameters: [
+        new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'string', format: 'uuid')),
+    ],
+    requestBody: new OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(properties: [
+            new OA\Property(property: 'field', type: 'string'),
+        ])
+    ),
+    responses: [
+        new OA\Response(response: 200, description: '...', content: new OA\JsonContent(ref: '#/components/schemas/GameSession')),
+        new OA\Response(response: 404, description: 'Not found', content: new OA\JsonContent(ref: '#/components/schemas/Error')),
+    ]
+)]
+```
+
 **Update your agent memory** as you discover patterns and conventions in this codebase. This builds institutional knowledge across conversations.
 
 Examples of what to record:
