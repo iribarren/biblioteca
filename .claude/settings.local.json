@@ -24,7 +24,11 @@
       "Bash(git push:*)",
       "Bash(grep -l \"errors\\\\|modal\" /home/aritz/projects/biblioteca/thelibrary/public/i18n/*.json)",
       "Bash(docker compose exec -T backend-php php -r \":*)",
-      "Bash(echo \"EXIT: $?\")"
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(wc -l /c/Users/aritz/PhpstormProjects/biblioteca/thelibrary/public/i18n/*.json)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(npm test:*)"
     ]
   },
   "hooks": {

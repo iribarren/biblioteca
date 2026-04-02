@@ -34,4 +34,8 @@ Tiene sentido que tengamos componentes reutilizables en los distintos modos de j
 
 Analizar que framework puede ser más interesante
 
-El modo de juego actual pasara a llamarse "Aventura Rapida"
+El modo de juego actual pasara a llamarse "Aventura Rapida", y mantendra la estructura de capitulos y epilogo
+
+De cara a hacer los componentes reutilizablez, considera que otros modos de juego tendran otros flujos, por ejemplo es posible que se descubran libros que solo impliquen añadir una entrada al diario, que se tengan que añadir entradas al diario por otro motivo, o que se tengan que realizar tiradas de manera independiente
+
+Antes de realizar un plan de migracion completo, ofrece las diferencias que habria entre utilizar un framework u otro, y una vez eliga el framework, realiza un plan de migracion

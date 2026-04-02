@@ -36,16 +36,16 @@ services:
       - "host.docker.internal:host-gateway"
     restart: unless-stopped
 
-  # ── Frontend (static, served via nginx) ─────────────────────────────────────
+  # ── Frontend (Vite dev server) ───────────────────────────────────────────────
   frontend:
-    build:
-      context: ./thelibrary
-      dockerfile: Dockerfile
-    ports:
-      - "3000:80"
+    image: node:22-alpine
+    working_dir: /app
     volumes:
-      # Mount public/ for live-editing HTML/CSS/JS without rebuilds in dev
-      - ./thelibrary/public:/usr/share/nginx/html:ro
+      - ./thelibrary:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm run dev -- --host"
+    ports:
+      - "3000:5173"
     restart: unless-stopped
 
   # ── MySQL 8 ──────────────────────────────────────────────────────────────────

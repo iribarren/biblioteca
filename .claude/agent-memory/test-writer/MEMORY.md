@@ -1,2 +1,3 @@
 - [Project Test Setup](project_test_setup.md) — PHPUnit 12 + Symfony 7.2 test infra, MySQL test DB, rate limiter override, APP_ENV fix
 - [Auth Known Issues](project_auth_known_issues.md) — /api/auth/me 500 on unauthenticated + /api/auth/refresh 404 (gesdinet route not imported)
+- [Frontend Test Setup](project_frontend_test_setup.md) — Vitest 3 + jsdom in thelibrary/; Pinia setup pattern; localStorage via jsdom
