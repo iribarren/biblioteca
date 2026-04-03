@@ -1,4 +1,4 @@
-# Estilos custom dependiendo del genero de juego
+# Estilos custom dependiendo del genero de la partida
 
 Deberia existir distintas temas de la interfaz dependiendo del genero o epoca que se haya seleccionado
 tienen que existir por lo menos 6 temas
@@ -24,6 +24,13 @@ En la pantalla de documentación de la API solo estaran visibles los endpoints q
 
 Si un usuario con el rol admin que haya iniciado sesión en el admin accede a la pantalla de documentación de la API sí que verá todos los endpoints
 
+En el plan añade una tabla con los endpoints actuales para indicar la visibilidad que deben tener
+
+Existiran tres roles: admin, jugador, creador
+
+En principio los endpoints que tengan que ver con el jugador y la partida, tendran que poder ser usados por usuarios con el rol jugador
+
+Los endpoints que tengan que ver con oraculos y tiradas de dados tendran sus operaciones de consulta visibles para todo el mundo, las operaciones de creacion estaran limitadas a usuarios con el rol creador y admin
 
 
 # Crear documentacion de la API
@@ -66,22 +73,4 @@ Cuales son las mejores plataformas online para desplegar el proyecto gratis o a 
 
 Analiza como se podria mejorar la performance de juego, las transiciones en el front son bastante lentas
 
-# el puto bug
-
-i started with a fresh browser and the problem persists
-
-when i click the Chapter II button, this is the flow from the frontend i see in the web developer tools
-
-POST http://localhost:8080/api/game/63705ffa-d143-480a-af6d-8ddb67951951/journal
-
-That creates the journal entry correctly
-
-GET http://localhost:8080/api/game/63705ffa-d143-480a-af6d-8ddb67951951
-
-And this is the response json
-
-{"id":"63705ffa-d143-480a-af6d-8ddb67951951","character_name":"TEST","character_description":"TEST","genre":"XXXPunk","epoch":"Medieval","current_phase":"chapter_1","game_mode":"aventura_rapida","overcome_score":0,"support_used":false,"created_at":"2026-04-02T17:49:18+00:00","updated_at":"2026-04-02T17:49:44+00:00","attributes":[{"id":43,"type":"body","base_value":1,"background":-1,"background_title":null,"support":0,"support_title":null},{"id":44,"type":"mind","base_value":1,"background":0,"background_title":null,"support":0,"support_title":null},{"id":45,"type":"social","base_value":1,"background":0,"background_title":null,"support":0,"support_title":null}],"books":[{"id":14,"phase":"chapter_1","color":"Negro","color_hint":"Darkness, night, hidden","binding":"Piel humana","binding_hint":"Horror, cruelty, pain, feelings","smell":"Tierra mojada","smell_hint":"Rain, harvest, resolution","interior":"Escrito en alfabeto desconocido y con muchas ilustraciones extra\u00f1as"}],"journal_entries":[{"id":24,"phase":"chapter_1","content":"BIBLIO","book_id":null,"created_at":"2026-04-02T17:49:49+00:00"},{"id":25,"phase":"chapter_1","content":"eve1","book_id":14,"created_at":"2026-04-02T17:50:14+00:00"},{"id":26,"phase":"chapter_1","content":"des1","book_id":14,"created_at":"2026-04-02T17:51:25+00:00"}],"roll_results":[{"id":13,"phase":"chapter_1","action_number":null,"action_die":5,"challenge_die_1":9,"challenge_die_2":9,"modifier":1,"action_score":6,"outcome":"miss","attribute_type":"body"}]}
-
-The game phase is still chapter1
-
-Once the journal has been logged, the phase should be updated before getting the game info, so the frontend can transition to chapter 2
+# suavizar transiciones scroll

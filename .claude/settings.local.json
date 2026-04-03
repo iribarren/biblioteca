@@ -29,7 +29,12 @@
       "Bash(wc -l /c/Users/aritz/PhpstormProjects/biblioteca/thelibrary/public/i18n/*.json)",
       "Bash(npm install:*)",
       "Bash(npm run:*)",
-      "Bash(npm test:*)"
+      "Bash(npm test:*)",
+      "Bash(xargs grep:*)",
+      "Bash(find /c/Users/aritz/PhpstormProjects/biblioteca/oracles-api/src/Controller -name \"*.php\" -type f ! -path \"*/vendor/*\" -exec basename {} \\\\;)",
+      "Bash(find /c/Users/aritz/PhpstormProjects/biblioteca/thelibrary/src -type f \\\\\\( -name \"*.vue\" -o -name \"*.js\" \\\\\\) -exec basename {} \\\\;)",
+      "Bash(xargs wc:*)",
+      "Bash(grep -n \"ROLE_\\\\|jugador\\\\|creador\\\\|player\\\\|creator\" /c/Users/aritz/PhpstormProjects/biblioteca/oracles-api/src/Controller/Admin/*.php)"
     ]
   },
   "hooks": {
