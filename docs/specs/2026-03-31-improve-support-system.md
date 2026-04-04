@@ -92,33 +92,63 @@ The support system (Apoyo) currently awards a numeric +1 bonus when a player ach
 
 ### Frontend (`thelibrary/`)
 
-1. **Chapter roll weak_hit flow (`app.js` — `onChapterRoll` area):**
-   - After `animateDiceRoll` completes and the outcome is `weak_hit`, show a new inline section (between the roll result and the post-journal section) with:
-     - A prompt/label explaining the player found support.
-     - A text input (`maxlength="50"`) for the support description.
-     - A "Confirm" button.
-   - On confirm: call the new API endpoint to save the `support_title`, then reveal the post-journal section.
-   - On `hit` or `miss`: skip this section entirely, go straight to post-journal.
+> **Note:** The frontend was migrated from Vanilla JS to **Vue 3 + Vite + Pinia** after this spec was originally drafted. All file references below reflect the current Vue architecture in `thelibrary/src/`.
 
-2. **Epilogue action flow (`app.js` — `buildActionSection` / `renderSupportButtons`):**
-   - Remove the current separate `renderSupportButtons()` section and the `#epilogue-support-selector` container.
-   - When the player selects an attribute (`onSelectEpilogueAttribute`):
-     - Check if the selected attribute has `support > 0` and `game.support_used === false`.
-     - If yes: show an inline confirmation prompt displaying the `support_title` and the bonus value. Two buttons: "Use" / "Do not use".
-     - If the player clicks "Use": set `_selectedSupportAttribute` to the selected attribute type.
-     - If the player clicks "Do not use" or does nothing: set `_selectedSupportAttribute` to `null`.
-   - The roll button remains enabled regardless of the support decision.
-   - The existing `onRollEpilogueAction()` function already sends `_selectedSupportAttribute` to the API — no change needed there.
+**1. Chapter roll weak_hit flow — `src/views/aventura-rapida/ChapterView.vue`:**
 
-3. **Sidebar attribute display (`renderAttributeList`):**
-   - When `attr.support > 0` and `attr.support_title` is set, display the title alongside the support pip (e.g., show a small text label under or next to the support value).
+The current step machine is: `'book' → 'pre-journal' → 'roll' → 'post-journal' → 'next'`. A new `'support-title'` step is inserted between `'roll'` and `'post-journal'`:
 
-4. **Localization (`i18n`):**
-   - Add new translation keys for:
-     - Support description prompt text.
-     - Epilogue support confirmation prompt (with placeholder for support_title).
-     - Epilogue support one-time reminder text.
-     - "Use support" / "Do not use" button labels.
+- In `onDiceComplete()`: instead of immediately setting `step = 'post-journal'`, check `rollResult.value.outcome`:
+  - If `'weak_hit'`: set `step = 'support-title'`.
+  - Otherwise: set `step = 'post-journal'` as today.
+- Add new refs: `supportTitleInput = ref('')`, `supportTitleErr = ref('')`, `supportTitleLoad = ref(false)`.
+- Add `onSubmitSupportTitle()` async function:
+  - Validates non-empty input.
+  - Calls `API.saveSupportTitle(gameStore.gameId, selectedAttr.value, supportTitleInput.value.trim())`.
+  - On success: updates game store with the returned game state, sets `step = 'post-journal'`.
+  - On error: shows `supportTitleErr`.
+- Add a new `v-if="step === 'support-title'"` block in the template, between the roll result `<DiceRoll>` and the post-journal section:
+  - A prompt label (i18n key).
+  - A `<input type="text" maxlength="50">` bound to `supportTitleInput`.
+  - A "Confirm" button calling `onSubmitSupportTitle`, disabled while loading.
+  - A `<MessageBar>` for `supportTitleErr`.
+- The `selectedAttr` ref already holds the rolled attribute — pass it directly to `API.saveSupportTitle`.
+
+**2. Epilogue support confirmation — `src/components/AttributeSelector.vue`:**
+
+The current support section (lines 46–72) shows a separate list of ALL attributes with `support > 0`, allowing the player to pick any one. Replace this with a **contextual inline confirmation** tied to the currently selected attribute:
+
+- When `showSupport=true` AND `selectedAttribute` is set AND the selected attribute (looked up from `attributes` array) has `support > 0` AND `!supportUsed`:
+  - Show an inline prompt displaying the attribute's `support_title` (with a fallback if `null`).
+  - Include the reminder that support can only be used once.
+  - Two buttons: "Use" → `$emit('select-support', selectedAttribute)` and "Do not use" → `$emit('select-support', null)`.
+- When the selected attribute has `support === 0` or `supportUsed === true`: no prompt (or the existing "already used" note).
+- The `@select-support` emit and `selectedSupport` prop stay as-is — `EpilogueView.vue` already wires them to `selectedSupport` ref and passes it to `API.rollEpilogueAction`. No changes needed in `EpilogueView.vue`.
+
+**3. Sidebar attribute display — `src/layout/AppSidebar.vue`:**
+
+Currently lines 137–138 show the support pip value only. When `attr.support > 0` and `attr.support_title` is set, display the title as a secondary label below or next to the value (e.g., `+1 — "Ancient map"`). Handle `null` gracefully (show value only).
+
+**4. New API function — `src/api/index.js`:**
+
+Add alongside the existing chapter functions (after line 103):
+
+```js
+export const saveSupportTitle = (gameId, attribute, supportTitle) =>
+  post(`/api/game/${gameId}/chapter/support-title`, { attribute, support_title: supportTitle })
+```
+
+**5. Localization — `src/assets/i18n/es.json` and `en.json`:**
+
+Add new keys under the `chapter` and `epilogue` namespaces:
+
+- `chapter.support_title_prompt` — label above the input ("¿Qué apoyo encontraste?" / "What support did you find?")
+- `chapter.support_title_placeholder` — input placeholder ("Mapa antiguo, daga de plata…" / "Ancient map, silver dagger…")
+- `chapter.support_title_confirm` — confirm button label
+- `epilogue.support_confirm_prompt` — contextual prompt with `{title}` placeholder ("¿Usar tu apoyo '{title}'? (+1)" / "Use your support '{title}'? (+1)")
+- `epilogue.support_once_reminder` — one-time reminder text
+- `epilogue.use_support_btn` — "Usar apoyo" / "Use support"
+- `epilogue.no_support_btn` — already exists; verify it covers "Do not use" semantics
 
 ### API Contract
 

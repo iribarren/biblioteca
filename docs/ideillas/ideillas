@@ -2,6 +2,10 @@
 
 # Añadir popup informativo junto a la opcion de nueva partida que describa las instrucciones de juego
 
+Añade un boton o icono independiente a la derecha del boton Nueva Partida que despliegue un pop-up con una explicacion del juego.
+
+En el popup aparecera una explicacion del juego, y del flujo.
+
 # Añadir enlace al pdf
 
 # Securizar API
