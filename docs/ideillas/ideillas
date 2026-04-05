@@ -8,37 +8,6 @@ En el popup aparecera una explicacion del juego, y del flujo.
 
 # Añadir enlace al pdf
 
-# Securizar API
-
-Analiza como securizar la API
-
-Tienen que existir endpoints que sean publicos y esten disponibles para todo el mundo
-
-Otros endpoints por el contrario necesitan de un token generado para un usuario registrado para ser utilizados
-
-Dentro de los endpoints disponibles para usuarios, la visibilidad de los endpoints dependerá también del rol del usuario
-
-En la pantalla de documentación de la API solo estaran visibles los endpoints que son completamente publicos
-
-Si un usuario con el rol admin que haya iniciado sesión en el admin accede a la pantalla de documentación de la API sí que verá todos los endpoints
-
-En el plan añade una tabla con los endpoints actuales para indicar la visibilidad que deben tener
-
-Existiran tres roles: admin, jugador, creador
-
-En principio los endpoints que tengan que ver con el jugador y la partida, tendran que poder ser usados por usuarios con el rol jugador
-
-Los endpoints que tengan que ver con oraculos y tiradas de dados tendran sus operaciones de consulta visibles para todo el mundo, las operaciones de creacion estaran limitadas a usuarios con el rol creador y admin
-
-
-# Mejorar UX para partidas guardadas
-
-el almacenamiento local solo deberia servir para la partida en marcha, una vez se sale se tendria que borrar
-
-mantener persistencia en BBDD si es un usuario registrado
-
-el listado de partidas guardadas del usuario no deberia aparecer en la portada, deberia cargarse en una popup el seleccionar partidas guardadas
-
 
 # Despelgar a produccion
 
@@ -52,6 +21,16 @@ Cuales son las mejores plataformas online para desplegar el proyecto gratis o a 
 
 Analiza como se podria mejorar la performance de juego, las transiciones en el front son bastante lentas
 
-# suavizar transiciones scroll
+# Mejorar UX. Iconos de cargar y suavizar transiciones
+
+El frontend se queda estatico mientras espera la respuesta del backend, esto es un problema de UX
+
+Analiza en que situaciones se llama al back y si en todos los casos el usuario es consciente de que se esta cargando.
+
+Otra mejora importante es que cuando hay transiciones a nuevas fases, o se pintan nuevos elementos en pantalla, la navegacion es algo brusca.
+
+Analiza también en que situaciones aparecen nuevos elementos en pantalla y si es necesario que la pantalla haga scroll a un elemento para que el usuario tenga clara cual es su siguiente accion
+
+Recopila todos los casos que encuentres con la solucion que planifiques para cada caso
 
 # expandir oraculos y tablas

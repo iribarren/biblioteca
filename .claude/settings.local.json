@@ -7,6 +7,7 @@
       "Bash(curl -s http://localhost:3000/)",
       "Bash(curl -s http://localhost:3000/js/app.js)",
       "Bash(curl *)",
+      "Bash(grep *)",
       "Bash(grep -v \"//.*getElementById\")",
       "Bash(git add *)",
       "Bash(git commit *)",
@@ -34,7 +35,8 @@
       "Bash(find /c/Users/aritz/PhpstormProjects/biblioteca/oracles-api/src/Controller -name \"*.php\" -type f ! -path \"*/vendor/*\" -exec basename {} \\\\;)",
       "Bash(find /c/Users/aritz/PhpstormProjects/biblioteca/thelibrary/src -type f \\\\\\( -name \"*.vue\" -o -name \"*.js\" \\\\\\) -exec basename {} \\\\;)",
       "Bash(xargs wc:*)",
-      "Bash(grep -n \"ROLE_\\\\|jugador\\\\|creador\\\\|player\\\\|creator\" /c/Users/aritz/PhpstormProjects/biblioteca/oracles-api/src/Controller/Admin/*.php)"
+      "Bash(grep -n \"ROLE_\\\\|jugador\\\\|creador\\\\|player\\\\|creator\" /c/Users/aritz/PhpstormProjects/biblioteca/oracles-api/src/Controller/Admin/*.php)",
+      "Bash(grep -E \"\\\\.\\(js|vue|json\\)$\")"
     ]
   },
   "hooks": {
