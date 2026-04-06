@@ -4,9 +4,13 @@
 # Required environment variables (no defaults — the compose file will refuse to start
 # if any of these are unset):
 #   APP_SECRET               — 32-char random string (symfony console secrets:generate-keys)
+#   JWT_PASSPHRASE           — passphrase used when generating the JWT private key
 #   MYSQL_PASSWORD           — strong password for biblioteca_user
 #   MYSQL_ROOT_PASSWORD      — strong password for MySQL root
 #   CORS_ALLOW_ORIGIN        — exact origin of your frontend, e.g. https://yourdomain.com
+#
+# Build-time variables (must be set before building the frontend image):
+#   VITE_API_BASE_URL        — full URL of the backend API, e.g. https://api.yourdomain.com
 #
 # Recommended: set these in .env.prod (git-ignored) and source it, or use Docker Swarm
 # secrets / your cloud provider's secrets manager.
@@ -29,6 +33,8 @@ services:
       APP_SECRET: "${APP_SECRET:?APP_SECRET is required for production}"
       DATABASE_URL: "mysql://biblioteca_user:${MYSQL_PASSWORD:?MYSQL_PASSWORD is required for production}@mysql:3306/biblioteca?serverVersion=8.0&charset=utf8mb4"
       CORS_ALLOW_ORIGIN: "${CORS_ALLOW_ORIGIN:?CORS_ALLOW_ORIGIN is required for production}"
+      # Passphrase for the JWT private key. Must match the passphrase used when the key pair was generated.
+      JWT_PASSPHRASE: "${JWT_PASSPHRASE:?JWT_PASSPHRASE is required for production}"
       # PHP_IDE_CONFIG is intentionally absent — no debugger in production.
 
   # ── Backend nginx proxy — production config ─────────────────────────────────
@@ -41,6 +47,12 @@ services:
 
   # ── Frontend (static) — production image ────────────────────────────────────
   frontend:
+    build:
+      # VITE_API_BASE_URL is a build-time variable baked into the JS bundle by Vite.
+      # It must be provided when building the image, not at runtime.
+      # Example: VITE_API_BASE_URL=https://api.yourdomain.com docker compose -f compose.yaml -f compose.prod.yaml build frontend
+      args:
+        VITE_API_BASE_URL: "${VITE_API_BASE_URL:?VITE_API_BASE_URL is required to build the frontend}"
     # No volume mounts: use the files baked into the image at build time.
     volumes: []
     # Port 3000 is NOT exposed externally. Traffic reaches the frontend only through
