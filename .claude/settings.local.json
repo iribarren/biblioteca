@@ -36,7 +36,16 @@
       "Bash(find /c/Users/aritz/PhpstormProjects/biblioteca/thelibrary/src -type f \\\\\\( -name \"*.vue\" -o -name \"*.js\" \\\\\\) -exec basename {} \\\\;)",
       "Bash(xargs wc:*)",
       "Bash(grep -n \"ROLE_\\\\|jugador\\\\|creador\\\\|player\\\\|creator\" /c/Users/aritz/PhpstormProjects/biblioteca/oracles-api/src/Controller/Admin/*.php)",
-      "Bash(grep -E \"\\\\.\\(js|vue|json\\)$\")"
+      "Bash(grep -E \"\\\\.\\(js|vue|json\\)$\")",
+      "Bash(ls -la /c/Users/aritz/PhpstormProjects/biblioteca/.env*)",
+      "Bash(xargs ls:*)",
+      "Bash(xargs cat:*)",
+      "Bash(wc -l /c/Users/aritz/PhpstormProjects/biblioteca/thelibrary/dist/js/*.js)",
+      "Bash(find /c/Users/aritz/PhpstormProjects/biblioteca/oracles-api/config/packages -name \"*.yaml\" -type f -exec grep -l \"header\\\\|security\\\\|http\" {} \\\\;)",
+      "Bash(find /c/Users/aritz/PhpstormProjects/biblioteca -maxdepth 1 -type f -name \"*.md\" -exec grep -l \"deploy\\\\|produc\\\\|security\" {} \\\\;)",
+      "Bash(ls c:/Users/aritz/PhpstormProjects/biblioteca/.env*)",
+      "Bash(ls c:/Users/aritz/PhpstormProjects/biblioteca/oracles-api/.env*)",
+      "Bash(ls c:/Users/aritz/PhpstormProjects/biblioteca/thelibrary/.env*)"
     ]
   },
   "hooks": {
@@ -57,10 +66,9 @@
         "matcher": "",
         "hooks": [
           {
-            "type": "prompt",
-            "prompt": "Review the assistant's last response. If it included code edits (Edit/Write tools) to source files (.php, .js, .css, .twig) but did NOT run any tests or delegate to test-writer, respond with EXACTLY: 'Consider running tests or delegating to the test-writer agent to verify these changes.' Otherwise respond with nothing.",
-            "timeout": 15,
-            "model": "claude-haiku-4-5-20251001"
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/check-tests.sh\"",
+            "timeout": 15
           }
         ]
       }
