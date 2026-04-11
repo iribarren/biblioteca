@@ -1,0 +1,32 @@
+# Fly.io configuration for the MySQL 8 database.
+# This is a SEPARATE Fly app from the backend — it communicates via
+# Fly's private network (biblioteca-db.internal:3306).
+#
+# Deploy with:
+#   fly apps create biblioteca-db
+#   fly volumes create mysql_data --size 1 --region mad -a biblioteca-db
+#   fly secrets set MYSQL_ROOT_PASSWORD="<strong-password>" -a biblioteca-db
+#   fly secrets set MYSQL_PASSWORD="<strong-password>"      -a biblioteca-db
+#   fly deploy --config docker/fly/mysql.toml -a biblioteca-db
+#
+# IMPORTANT: Port 3306 is NOT exposed publicly. Only biblioteca-api can reach
+# it via the private .internal network.
+
+app            = 'biblioteca-db'
+primary_region = 'mad'
+
+[build]
+  image = 'mysql:8.0'
+
+[env]
+  MYSQL_DATABASE = "biblioteca"
+  MYSQL_USER     = "biblioteca_user"
+  # MYSQL_ROOT_PASSWORD and MYSQL_PASSWORD are set as Fly secrets, not here.
+
+[[mounts]]
+  source       = "mysql_data"
+  destination  = "/var/lib/mysql"
+  initial_size = "1gb"
+
+# No [services] block → port 3306 is only reachable via the Fly private network.
+# The backend connects using: biblioteca-db.internal:3306
