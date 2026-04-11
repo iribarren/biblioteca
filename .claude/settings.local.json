@@ -45,7 +45,9 @@
       "Bash(find /c/Users/aritz/PhpstormProjects/biblioteca -maxdepth 1 -type f -name \"*.md\" -exec grep -l \"deploy\\\\|produc\\\\|security\" {} \\\\;)",
       "Bash(ls c:/Users/aritz/PhpstormProjects/biblioteca/.env*)",
       "Bash(ls c:/Users/aritz/PhpstormProjects/biblioteca/oracles-api/.env*)",
-      "Bash(ls c:/Users/aritz/PhpstormProjects/biblioteca/thelibrary/.env*)"
+      "Bash(ls c:/Users/aritz/PhpstormProjects/biblioteca/thelibrary/.env*)",
+      "Bash(docker top:*)",
+      "Bash(cmd.exe /c \"where gh\")"
     ]
   },
   "hooks": {
