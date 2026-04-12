@@ -22,6 +22,7 @@
 ### Sub-projects (each has its own git repo)
 oracles-api/
 thelibrary/
+android/
 
 ### Composer (project root, if ever used)
 vendor/
