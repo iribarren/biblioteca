@@ -34,6 +34,14 @@ Cuales son las mejores plataformas online para desplegar el proyecto gratis o a 
 
 # expandir oraculos y tablas
 
-# version mobile / apk
+# Crear aplicacion Android
+
+añadir un cliente movil para android a la aplicación
+
+Debe permitir añadir registros al diario mediante el micrófono
+
+Estudiar que tenga animaciones propias
+
+Igual que la aplicacion de front, se encargará del flujo de las fases del juego, delegando en la api oracles-api toda la logica
 
 # añadir modo de juego
