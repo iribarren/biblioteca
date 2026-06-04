@@ -1,40 +1,6 @@
-# Añadir popup informativo junto a la opcion de nueva partida que describa las instrucciones de juego
 
-Añade un boton o icono independiente a la derecha del boton Nueva Partida que despliegue un pop-up con una explicacion del juego. La explicación tiene que estar en ambos idiomas en los que esta la aplicación actualmente.
 
-En el popup aparecera una explicacion del juego, y del flujo. Se explicara el funcionamiento de las jugadas.
-
-La biblioteca es un juego de rol solitario de tipo diario, en el que prima la imaginación.
-
-La premisa del juego es que el jugador accede a una biblioteca imaginaria que representa su mente y los libros son sus recuerdos. 
-
-El juego se divide en Prologo, Capitulos y Epilogo
-
-En el prologo el jugador decide la ambientación de la partida, y describe en el diario como es la biblioteca que representa su mente
-
-En los capitulos, el jugador explora libros de la biblioteca, y a partir de las caracteristicas del libro, tiene que imaginar una situacion de su pasado, seleccionar como se enfrento a ella y escribir un desenlace dependiendo del resultado de la tirada de dados.
-
-En el epilogo, el jugador descrubre un último libro en el que se escribirá el recuerdo de la situación a la que se enfrenta en el presente. Debe combinar distintas tiradas para ir consiguiendo puntos de superación y hacer una ultima tirada que decidirá su destino.
-
-Además de esta información en la portada tiene que haber un enlace al PDF en el que se explica el juego para poder jugarse con lapiz y papel. El documento ahora mismo esta en la carpeta docs, pero se debe copiar al front para poder servirlo
-
-# Despelgar a produccion y analisis de performance
-
-Analizar si el proyecto esta preparado para desplegarse en produccion
-
-Analiza como se podria mejorar la performance de juego, el front suele estar esperando mucho a las respuestas de la API
-
-Es correcto mantener la estructura docker o se puede hacer que cada proyecto tenga su despliegue independiente?
-
-Revisa tambien todo lo relacionado con la seguridad
-
-Las contraseñas viajan de manera segura? funciona https? hay vulnerabilidades?
-
-Cuales son las mejores plataformas online para desplegar el proyecto gratis o a bajo coste
-
-# expandir oraculos y tablas
-
-# Crear aplicacion Android
+# Mejorar aplicacion android aplicacion Android
 
 añadir un cliente movil para android a la aplicación
 
@@ -44,4 +10,12 @@ Estudiar que tenga animaciones propias
 
 Igual que la aplicacion de front, se encargará del flujo de las fases del juego, delegando en la api oracles-api toda la logica
 
+# Despelgar a produccion y analisis de performance
+
+hacer despliegue verdadero
+
+# crear spec clara del flujo de juego
+
 # añadir modo de juego
+
+# expandir oraculos y tablas
