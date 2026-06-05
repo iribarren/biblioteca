@@ -8,7 +8,8 @@ Workspace containing two independent projects for "The Library" (La Biblioteca),
 | Directory | Project | Repository | Description |
 |-----------|---------|------------|-------------|
 | `oracles-api/` | Oracles API | `iribarren/oracles-api` | Symfony 7.2 REST API + EasyAdmin panel |
-| `thelibrary/` | The Library | `iribarren/thelibrary` | Vanilla JS frontend SPA |
+| `thelibrary/` | The Library | `iribarren/thelibrary` | Vue 3 + Vite frontend SPA |
+| `android/` _(planned)_ | Android Client | — | Kotlin + Jetpack Compose (spec: `docs/specs/2026-04-11-android-client.md`) |
 
 Each sub-project has its own git repo, `README.md`, and `CLAUDE.md`. Refer to those for project-specific instructions.
 
@@ -61,3 +62,15 @@ When the user reports a bug:
 - NEVER commit directly to `master`.
 - Branch naming: `feature/<name>` or `bugfix/<name>`, lowercase, hyphen-separated.
 - If already on a feature/bugfix branch, continue on it.
+
+### Documentation Update (mandatory before committing)
+
+Every PR that changes observable behaviour MUST update the relevant documentation in the same branch. Check each item that applies:
+
+- **New/removed/changed API endpoint?** → Update the `#[OA\...]` annotation on the controller method. Swagger is the single source of truth for endpoints — do NOT list endpoints in `oracles-api/README.md`.
+- **Setup/commands/ports/services changed?** → Update root `README.md` and the relevant `compose*.yaml` docs.
+- **Frontend stack or structure changed?** → Update `thelibrary/README.md` and `thelibrary/CLAUDE.md`.
+- **New environment variable?** → Add it to `docs/env-vars-production.md`.
+- **Deployment/infra changed?** → Update `docs/despliegue-fly-io.md`.
+- **New sub-project?** → Add it to the sub-projects table in root `CLAUDE.md` and `README.md`.
+- **Cloudflare Pages security headers changed?** → Update `thelibrary/public/_headers`.
