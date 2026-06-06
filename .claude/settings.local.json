@@ -47,10 +47,23 @@
       "Bash(ls c:/Users/aritz/PhpstormProjects/biblioteca/oracles-api/.env*)",
       "Bash(ls c:/Users/aritz/PhpstormProjects/biblioteca/thelibrary/.env*)",
       "Bash(docker top:*)",
-      "Bash(cmd.exe /c \"where gh\")"
+      "Bash(cmd.exe /c \"where gh\")",
+      "Bash(rtk grep *)"
     ]
   },
   "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // \"\"' | { read -r f; case \"$f\" in *oracles-api/src/Controller/*Controller.php) echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PostToolUse\",\"additionalContext\":\"[doc-guard] Controller edited — update the OpenAPI annotation. Swagger (/api/doc, /admin/api/doc) is the source of truth for endpoints; README must NOT list them.\"}}';;  *compose*.yaml|*/docker/*) echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PostToolUse\",\"additionalContext\":\"[doc-guard] Infrastructure file edited — check root README.md or docs/despliegue-fly-io.md.\"}}';;  *thelibrary/src/*) echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PostToolUse\",\"additionalContext\":\"[doc-guard] Frontend source edited — check thelibrary/README.md and thelibrary/CLAUDE.md.\"}}';;  esac; } 2>/dev/null || true",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Edit|Write",

@@ -8,8 +8,9 @@ This workspace contains two independent projects:
 
 | Project | Directory | Repository | Description |
 |---------|-----------|------------|-------------|
-| **The Library** | `thelibrary/` | [iribarren/thelibrary](https://github.com/iribarren/thelibrary) | Vanilla JS frontend SPA |
+| **The Library** | `thelibrary/` | [iribarren/thelibrary](https://github.com/iribarren/thelibrary) | Vue 3 + Vite frontend SPA |
 | **Oracles API** | `oracles-api/` | [iribarren/oracles-api](https://github.com/iribarren/oracles-api) | Symfony 7.2 REST API + EasyAdmin |
+| **Android Client** | `android/` _(planned)_ | — | Kotlin + Jetpack Compose mobile client (spec: [docs/specs/2026-04-11-android-client.md](docs/specs/2026-04-11-android-client.md)) |
 
 Each project has its own git repository, README, and documentation.
 
@@ -33,8 +34,8 @@ Each project has its own git repository, README, and documentation.
 | Database | MySQL | 8.0 |
 | ORM | Doctrine | 3.x |
 | Admin | EasyAdmin | 4.x |
-| Frontend | Vanilla JS | ES6+ |
-| Styling | CSS (custom design system) | — |
+| Frontend | Vue 3 + Vite + Pinia + Vue Router | — |
+| Styling | CSS (custom properties design system) | — |
 | Containerization | Docker Compose | — |
 | Web server | Nginx | Alpine |
 
@@ -64,7 +65,7 @@ docker compose exec backend-php php bin/console doctrine:fixtures:load --no-inte
 | Frontend (game) | <http://localhost:3000> |
 | Backend API | <http://localhost:8080/api> |
 | Admin panel | <http://localhost:8080/admin> |
-| MySQL | localhost:3306 |
+| MySQL | localhost:33306 |
 
 ### Default Admin Credentials
 
@@ -97,11 +98,17 @@ biblioteca/                       # Workspace root
 │   │   └── DataFixtures/         # OracleFixtures, AdminUserFixtures
 │   ├── Dockerfile
 │   └── Dockerfile.prod
-├── thelibrary/                   # Vanilla JS frontend (own git repo)
-│   └── public/
-│       ├── index.html            # SPA entry point
-│       ├── js/                   # app.js, api.js, state.js, animators
-│       └── css/                  # theme, layout, components, animations
+├── thelibrary/                   # Vue 3 + Vite frontend (own git repo)
+│   ├── src/
+│   │   ├── main.js               # App bootstrap
+│   │   ├── App.vue               # Root component
+│   │   ├── router/               # Vue Router (hash-based)
+│   │   ├── stores/               # Pinia stores (game, auth)
+│   │   ├── views/                # Page-level views per game phase
+│   │   ├── components/           # Reusable Vue components
+│   │   └── assets/css/           # theme, layout, components, animations
+│   ├── index.html                # Vite entry point
+│   └── vite.config.js            # Vite + Vue plugin
 ├── docker/
 │   ├── nginx/                    # Nginx configs (dev + prod)
 │   └── php/conf.d/               # Xdebug config
@@ -165,7 +172,7 @@ Xdebug is preconfigured for PhpStorm. The `PHP_IDE_CONFIG` environment variable 
 
 ### Live Editing
 
-Frontend files in `thelibrary/public/` are mounted as a volume, so changes to HTML, CSS, and JS are reflected immediately without rebuilding.
+The Vite dev server runs inside the `frontend` container (port 5173, mapped to 3000). Changes to files in `thelibrary/src/` are reflected immediately via HMR without restarting the container.
 
 ## License
 

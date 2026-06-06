@@ -201,7 +201,7 @@ Después actualizar `CORS_ALLOW_ORIGIN` en los secrets de Fly.io:
 fly secrets set CORS_ALLOW_ORIGIN="https://tudominio.com" -a biblioteca-api
 ```
 
-Y actualizar `connect-src` en `thelibrary/public/_headers`:
+Y actualizar `connect-src` en `thelibrary/public/_headers` (fichero de cabeceras de seguridad de Cloudflare Pages, en la raíz del repo de thelibrary):
 
 ```
 connect-src 'self' https://api.tudominio.com;
@@ -317,4 +317,4 @@ fly secrets set \
 | `oracles-api/fly/supervisord.conf` | Gestiona los procesos nginx y php-fpm |
 | `oracles-api/fly/nginx.fly.conf` | Config Nginx para Fly (PHP-FPM en localhost) |
 | `docker/fly/mysql.toml` | Config del app MySQL en Fly.io |
-| `thelibrary/public/_headers` | Cabeceras de seguridad para Cloudflare Pages (CSP, HSTS, etc.) |
+| `thelibrary/public/_headers` | Cabeceras de seguridad para Cloudflare Pages (CSP, HSTS, etc.) — actualizar `connect-src` si cambia la URL del backend |
