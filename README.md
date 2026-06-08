@@ -84,38 +84,6 @@ The following variables can be overridden via a `.env` file or shell environment
 | `MYSQL_PASSWORD` | `biblioteca_pass` | Database user password |
 | `MYSQL_ROOT_PASSWORD` | `root_secret` | Database root password |
 
-## Architecture
-
-```
-biblioteca/                       # Workspace root
-├── oracles-api/                  # Symfony 7.2 backend (own git repo)
-│   ├── src/
-│   │   ├── Controller/           # API controllers + EasyAdmin CRUD
-│   │   ├── Entity/               # Doctrine entities
-│   │   ├── Enum/                 # GamePhase, AttributeType, RollOutcome
-│   │   ├── Service/              # GameEngine, DiceService
-│   │   ├── Oracle/               # OracleService, BookGenerator
-│   │   └── DataFixtures/         # OracleFixtures, AdminUserFixtures
-│   ├── Dockerfile
-│   └── Dockerfile.prod
-├── thelibrary/                   # Vue 3 + Vite frontend (own git repo)
-│   ├── src/
-│   │   ├── main.js               # App bootstrap
-│   │   ├── App.vue               # Root component
-│   │   ├── router/               # Vue Router (hash-based)
-│   │   ├── stores/               # Pinia stores (game, auth)
-│   │   ├── views/                # Page-level views per game phase
-│   │   ├── components/           # Reusable Vue components
-│   │   └── assets/css/           # theme, layout, components, animations
-│   ├── index.html                # Vite entry point
-│   └── vite.config.js            # Vite + Vue plugin
-├── docker/
-│   ├── nginx/                    # Nginx configs (dev + prod)
-│   └── php/conf.d/               # Xdebug config
-├── compose.yaml                  # Docker Compose (4 services)
-└── compose.prod.yaml             # Production overrides
-```
-
 ## Game Mechanics
 
 The game progresses through a fixed sequence of phases:

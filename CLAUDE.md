@@ -38,6 +38,12 @@ docker compose exec backend-php php bin/console doctrine:fixtures:load --no-inte
 - Game-specific terms use these translations: Cuerpo=Body, Mente=Mind, Social=Social, Fase=Phase, Partida=GameSession
 - Data management, and persistance must always happen in the backend
 - Security is an MVP requirement, not a stretch goal
+
+## Execution Policy
+- NEVER run anything in a scratch/temporary directory (e.g. `/tmp/...`), and NEVER execute commands, tests, installs, or tooling outside the project folder.
+- All commands MUST run inside the project tree (the workspace or a sub-project), or inside the project's own Docker services (`docker compose exec ...`).
+- If a constraint prevents running something in place (e.g. permissions on `node_modules`, an unsuitable container image, a missing dependency, a missing browser), STOP. Do not work around it with a scratch directory or an external location. Instead, report the blocker and propose the alternatives or fixes (e.g. correct file ownership, adjust the Docker image/service, add the dependency, change config) and wait for the user to decide.
+
 ## Mandatory Workflow
 
 ### New Feature Workflow
