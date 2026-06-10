@@ -1,7 +1,7 @@
 # Android Native Client — La Biblioteca
 
 **Spec Date:** 2026-04-11
-**Status:** Draft — Pending Approval
+**Status:** Approved — Core-first MVP in progress (2026-06-10)
 **Author:** project-manager-docs
 **Target Sub-project:** `android/` (new directory, own git repo)
 
@@ -96,7 +96,7 @@ This is an **MVP build**: single-player flow, online-only, no Play Store deploym
 **Acceptance Criteria:**
 - Home screen lists the player's existing GameSessions (fetched via the game endpoint available to `/api/auth/me` or a list endpoint if one exists — see Dependencies).
 - Tapping a game calls `GET /api/game/{id}` and routes to the screen corresponding to its current phase.
-- Phase routing maps 1:1 to the 10-phase state machine: `prologue`, `chapter_1`, `chapter_2`, `chapter_3`, `epilogue_action_1`, `epilogue_action_2`, `epilogue_action_3`, `epilogue_final`, `completed`.
+- Phase routing maps 1:1 to the 10-phase state machine: `prologue`, `chapter_1`, `chapter_2`, `chapter_3`, `epilogue_book`, `epilogue_action_1`, `epilogue_action_2`, `epilogue_action_3`, `epilogue_final`, `completed`.
 
 **US-2.3 — View completed games**
 > As a player, I want to review a finished game, so that I can re-read my journal entries.
@@ -336,6 +336,43 @@ android/
 
 ---
 
+## Test Parity Strategy
+
+The Android app MUST behave **exactly like the Vue 3 web frontend**, following the same flow. To make that parity explicit and auditable, the existing backend Behat tests (`oracles-api/features/*.feature`, 68 scenarios) and frontend Playwright E2E specs (`thelibrary/e2e/{auth,full-game-flow,game-lifecycle,session-resume}.spec.js`) drive the Android test suite via a **hybrid 3-layer approach**. The goal is not to re-run the existing suites on Android, but to mirror the *rules and flows* they enforce so the native client cannot drift from web behaviour.
+
+### Layer 1 — API contract tests (mirror Behat)
+
+Capture real JSON responses from the Docker backend (`docker compose exec ... curl`) into `app/src/test/resources/fixtures/`. Repository and interceptor tests then replay those fixtures through **MockWebServer** and assert the same rules the Behat features enforce — DTO shapes, request bodies, and state-transition guarantees — without guessing at response shapes.
+
+Specific rules to assert (per feature):
+- **`journal.feature`:** journal content is sent plain (no encoding/transformation client-side); empty content is rejected; a book-link may only reference a book from the **same game**.
+- **`chapters.feature`:** a roll does **not** advance the phase (advance is a separate explicit call); each attribute (Body/Mind/Social) is usable **once across chapters**; a support-title may only be chosen **after a `weak_hit`**.
+- **`epilogue.feature`:** the support bonus is **one-time per game**, tracked via `support_used`; attributes are **not reusable within the epilogue**; the final comparison is against `overcome_score`.
+- **`authentication.feature`:** a `401` triggers a **single-flight refresh + retry**; a refresh failure forces **logout**.
+
+**Tooling:** JUnit + MockWebServer + Turbine + `kotlinx-coroutines-test`.
+
+### Layer 2 — UI flow tests (mirror Playwright)
+
+One test class per Playwright spec, run on **Robolectric where possible** (fast JVM-side Compose tests). Playwright URL/phase assertions become nav-destination/phase assertions; CSS selectors become Compose **semantics matchers** via `Modifier.testTag`.
+
+| Playwright spec | Android test class |
+| --------------- | ------------------ |
+| `auth.spec.js` | `AuthFlowTest` |
+| `full-game-flow.spec.js` | `FullGameFlowTest` |
+| `game-lifecycle.spec.js` | `SessionListTest` |
+| `session-resume.spec.js` | `SessionResumeTest` |
+
+### Layer 3 — Thin E2E smoke (optional, manual)
+
+A single `@LargeTest` instrumentation test runs the full flow against the Docker backend at `http://10.0.2.2:8080`. It is **tagged out of the default fast suite** and run manually by the developer when validating end-to-end against a live backend.
+
+### Parity map
+
+`android/docs/parity-map.md` holds a table mapping **each Behat feature and Playwright spec to its Android test class(es)**, so parity coverage is auditable at a glance and gaps are obvious as the suites evolve.
+
+---
+
 ## Out of Scope
 
 - **iOS support.** Kotlin Multiplatform may be considered post-MVP but is not part of this spec.
@@ -405,17 +442,16 @@ android/
 
 ## Suggested Milestones
 
-These are indicative; actual sprint planning is up to the user.
+These are indicative; actual sprint planning is up to the user. Delivery is **core-first**: build the complete playable flow with parity to the web frontend, then defer mobile-specific enhancements (voice journaling and cinematic animations) to a final milestone.
 
 | Milestone | Scope |
 |-----------|-------|
 | **M0 — Bootstrap** | Android Studio project created in `android/`, own git repo, Hilt + Retrofit + Compose BOM wired, Material 3 theme scaffolded, CI-free local build green |
 | **M1 — Auth** | US-1.1 through US-1.5; EncryptedSharedPreferences + TokenAuthenticator working end-to-end |
-| **M2 — Game shell + Prologue** | US-2.1, US-2.2, US-3.1; navigation skeleton; home screen + prologue flow |
-| **M3 — Chapters** | US-4.1 through US-4.5; book reveal and dice roll animations; chapter journal with keyboard input |
-| **M4 — Voice journaling** | US-6.2; permission flow; append-to-field behavior; error handling |
-| **M5 — Epilogue + completion** | US-5.1 through US-5.3; US-2.3; read-only completed game view |
-| **M6 — Polish** | Theme refinement, animation profiling on low-end device, instrumentation tests for critical flows |
+| **M2 — Game shell + Home + Prologue + cold-start resume** | US-2.1, US-2.2, US-3.1; navigation skeleton; home/game-list screen; prologue flow; cold-start resume routing the player back to their current phase on app launch |
+| **M3 — Chapters with keyboard journal** | US-4.1 through US-4.5; chapter flow with keyboard journal input (US-6.1, US-6.3, US-6.4). Book reveal and dice roll use **simple/static presentation** first — cinematic animations deferred to M5 |
+| **M4 — Epilogue + completion** | US-5.1 through US-5.3; US-2.3; read-only completed game view. **Functional flow parity with the web frontend is achieved here** — a full game can be played end-to-end (prologue through completed). Book reveal stays static, deferred to M5 |
+| **M5 — Deferred mobile enhancements** | Voice journaling (US-6.2: permission flow, append-to-field behavior, error handling) **and** cinematic native animations (US-7.2: the Compose 3D book-flip and Canvas dice roll). Plus theme refinement and animation profiling on a low-end device |
 
 ---
 

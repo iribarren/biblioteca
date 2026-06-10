@@ -4,13 +4,13 @@ A solo tabletop RPG journal game where you explore your character's memories thr
 
 ## Projects
 
-This workspace contains two independent projects:
+This workspace contains three independent projects:
 
 | Project | Directory | Repository | Description |
 |---------|-----------|------------|-------------|
 | **The Library** | `thelibrary/` | [iribarren/thelibrary](https://github.com/iribarren/thelibrary) | Vue 3 + Vite frontend SPA |
 | **Oracles API** | `oracles-api/` | [iribarren/oracles-api](https://github.com/iribarren/oracles-api) | Symfony 7.2 REST API + EasyAdmin |
-| **Android Client** | `android/` _(planned)_ | — | Kotlin + Jetpack Compose mobile client (spec: [docs/specs/2026-04-11-android-client.md](docs/specs/2026-04-11-android-client.md)) |
+| **Android Client** | `android/` | own repo (gitignored by root) | Kotlin + Jetpack Compose native client; core-first MVP in progress (spec: [docs/specs/2026-04-11-android-client.md](docs/specs/2026-04-11-android-client.md)) |
 
 Each project has its own git repository, README, and documentation.
 
