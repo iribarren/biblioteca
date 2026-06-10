@@ -1,7 +1,7 @@
 # Biblioteca — Workspace
 
 ## Overview
-Workspace containing two independent projects for "The Library" (La Biblioteca), a solo TTRPG journal game.
+Workspace containing three independent projects for "The Library" (La Biblioteca), a solo TTRPG journal game.
 
 ## Sub-projects
 
@@ -9,7 +9,7 @@ Workspace containing two independent projects for "The Library" (La Biblioteca),
 |-----------|---------|------------|-------------|
 | `oracles-api/` | Oracles API | `iribarren/oracles-api` | Symfony 7.2 REST API + EasyAdmin panel |
 | `thelibrary/` | The Library | `iribarren/thelibrary` | Vue 3 + Vite frontend SPA |
-| `android/` _(planned)_ | Android Client | — | Kotlin + Jetpack Compose (spec: `docs/specs/2026-04-11-android-client.md`) |
+| `android/` | Android Client | own repo (gitignored by root) | Kotlin + Jetpack Compose native client; core-first MVP in progress (spec: `docs/specs/2026-04-11-android-client.md`) |
 
 Each sub-project has its own git repo, `README.md`, and `CLAUDE.md`. Refer to those for project-specific instructions.
 
