@@ -48,14 +48,25 @@ Each project has its own git repository, README, and documentation.
 ### Setup
 
 ```bash
+# Clone all the projects
+git clone git@github.com:iribarren/biblioteca.git
+cd biblioteca
+git clone git@github.com:iribarren/thelibrary.git
+git clone git@github.com:iribarren/oracles-api.git
 # Start all services
 docker compose up -d
+
+# Install backend dependencies
+docker compose exec backend-php composer install --no-interaction
 
 # Run database migrations
 docker compose exec backend-php php bin/console doctrine:migrations:migrate --no-interaction
 
 # Seed database (oracle tables + admin user)
 docker compose exec backend-php php bin/console doctrine:fixtures:load --no-interaction
+
+# Generate JWT keypair (required on every new machine — keys are not committed to git)
+docker compose exec backend-php php bin/console lexik:jwt:generate-keypair
 ```
 
 ### Access
